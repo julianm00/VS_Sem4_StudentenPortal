@@ -536,12 +536,8 @@ paths:
       tags:
         - Cuser
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Current_User"
+        "204":
+          description: No Content
       operationId: delete-cuser-id
       description: Cuser löschen
 components:

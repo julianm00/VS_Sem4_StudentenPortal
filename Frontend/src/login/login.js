@@ -107,13 +107,13 @@ export default class Register extends Page {
             try {
                 await this._app.backend.fetch("DELETE", stringDelS);
             } catch (ex) {
-                console.log(ex);
+                console.log("Fehler wegen Gateway Spezifikation, da leeres JSON");
             }
 
             try {
                 await this._app.backend.fetch("DELETE", stringDelU);
             } catch (ex2) {
-                console.log(ex2);
+                console.log("Fehler wegen Gateway Spezifikation, da leeres JSON");
             }
 
             location.hash = "#/";
@@ -128,7 +128,6 @@ export default class Register extends Page {
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
         document.querySelector("#lin3").classList.add("hidden");
-        document.querySelector("#lin4").classList.add("hidden");
 
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
@@ -141,7 +140,6 @@ export default class Register extends Page {
             document.querySelector("#lin1").classList.remove("hidden");
             document.querySelector("#lin2").classList.remove("hidden");
             document.querySelector("#lin3").classList.remove("hidden");
-            document.querySelector("#lin4").classList.remove("hidden");
 
             document.querySelector("#lout1").classList.add("hidden");
             document.querySelector("#lout2").classList.add("hidden");

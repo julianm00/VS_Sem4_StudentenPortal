@@ -120,7 +120,6 @@ export default class Register extends Page {
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
         document.querySelector("#lin3").classList.add("hidden");
-        document.querySelector("#lin4").classList.add("hidden");
 
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
@@ -133,7 +132,6 @@ export default class Register extends Page {
             document.querySelector("#lin1").classList.remove("hidden");
             document.querySelector("#lin2").classList.remove("hidden");
             document.querySelector("#lin3").classList.remove("hidden");
-            document.querySelector("#lin4").classList.remove("hidden");
 
             document.querySelector("#lout1").classList.add("hidden");
             document.querySelector("#lout2").classList.add("hidden");

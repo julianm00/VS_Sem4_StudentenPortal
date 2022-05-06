@@ -102,7 +102,6 @@ export default class PageList extends Page {
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
         document.querySelector("#lin3").classList.add("hidden");
-        document.querySelector("#lin4").classList.add("hidden");
 
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
@@ -115,7 +114,6 @@ export default class PageList extends Page {
             document.querySelector("#lin1").classList.remove("hidden");
             document.querySelector("#lin2").classList.remove("hidden");
             document.querySelector("#lin3").classList.remove("hidden");
-            document.querySelector("#lin4").classList.remove("hidden");
 
             document.querySelector("#lout1").classList.add("hidden");
             document.querySelector("#lout2").classList.add("hidden");
@@ -159,8 +157,10 @@ export default class PageList extends Page {
             await this._app.backend.fetch("DELETE", deleteString);
             console.log("DELETED");
         } catch {
-            console.log("del");
+            console.log("Fehler wegen Gateway Spezifikation, da leeres JSON");
         }
+
+        location.hash = "#/";
 
     }
 };
