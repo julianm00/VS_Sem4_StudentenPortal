@@ -48,10 +48,8 @@ export default class PageList extends Page {
         }
 
         if(!data_cuser.length) {
-            this._emptyMessageElement.classList.add("hidden");
-            this._permMessageElement.classList.remove("hidden");
-
             location.hash = "#/login/";
+            return;
         }
 
         let olStudentElement = this._mainElement.querySelector("ol");
@@ -84,17 +82,20 @@ export default class PageList extends Page {
                 olStudentElement.appendChild(liStudentElement);
             }
 
-
             //// TODO: Neue Methoden für Event Handler anlegen und hier registrieren ////
             /**liDozentElement.querySelector(".action.edit_dozent").addEventListener("click", () => location.hash = `#/editDozent/${dataset_dozent._id}`);
             liDozentElement.querySelector(".action.delete_dozent").addEventListener("click", () => this._askDelete(dataset_dozent._id));*/
         }
+
+        let logout = document.querySelector("#logout-btn");
+        logout.addEventListener("click", () => this._logout());
 
         //// TODO: Anzuzeigende Inhalte laden mit this._app.backend.fetch() ////
         //// TODO: Inhalte in die HTML-Struktur einarbeiten ////
         //// TODO: Neue Methoden für Event Handler anlegen und hier registrieren ////
     }
 
+    
     async _updateList() {
         let data_cuser = await this._app.backend.fetch("GET", "/cuser");
 
@@ -118,6 +119,47 @@ export default class PageList extends Page {
 
             document.querySelector("#lout1").classList.add("hidden");
             document.querySelector("#lout2").classList.add("hidden");
+        }
+
+    }
+
+    async _logout() {
+        console.log("Logout");
+
+        let data_cuserList = await this._app.backend.fetch("GET", "/cuser");
+        console.log(data_cuserList);
+
+        let data_cuser = data_cuserList[0];
+
+        let _newStudent = {
+            matrikel_nr: data_cuser.matrikel_nr,
+            first_name: data_cuser.first_name,
+            last_name: data_cuser.last_name,
+            birthday: data_cuser.birthday,
+            course: data_cuser.course,
+            course_id: data_cuser.course_id,
+        }
+
+        let _newUser = {
+            matrikel_nr: data_cuser.matrikel_nr,
+            email: data_cuser.email,
+            password: data_cuser.password
+        }
+
+        console.log(_newUser);
+
+        await this._app.backend.fetch("POST", "/student", {body: _newStudent});
+        await this._app.backend.fetch("POST", "/user", {body: _newUser});
+
+        console.log("POSTED");
+
+        let deleteString = '/cuser/' + data_cuser._id;
+        
+        try {
+            await this._app.backend.fetch("DELETE", deleteString);
+            console.log("DELETED");
+        } catch {
+            console.log("del");
         }
 
     }

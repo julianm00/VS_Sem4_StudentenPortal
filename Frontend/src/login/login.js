@@ -81,8 +81,8 @@ export default class Register extends Page {
             }
 
             let getStringStudent = '/student?matrikel_nr=' + _data_user[0].matrikel_nr;
-            console.log(getStringStudent);
             let _data_student = await this._app.backend.fetch("GET", getStringStudent);
+            console.log(getStringStudent);
 
             this._dataset_cuser.matrikel_nr = _data_student[0].matrikel_nr;
             this._dataset_cuser.first_name  = _data_student[0].first_name;
@@ -103,13 +103,7 @@ export default class Register extends Page {
 
             await this._app.backend.fetch("POST", '/cuser', {body: this._dataset_cuser});
             console.log("added");
-            
-            
-            /*
-            console.log("test4");
-            await this._app.backend.fetch("DELETE", stringDelU);
-            await this._app.backend.fetch("POST", '/cuser', {body: this._dataset_cuser});
-            location.hash = "#/"; */
+             
             try {
                 await this._app.backend.fetch("DELETE", stringDelS);
             } catch (ex) {
