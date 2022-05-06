@@ -1,0 +1,99 @@
+<!-- Stylesheet der Seite -->
+<style>
+  /* TODO: Stylesheet definieren  */
+  main ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  main li {
+    margin: 0;
+    padding: 1em;
+    padding-bottom: 1em;
+
+    background-color: white;
+    transition: background-color 0.5s;
+
+    border: 0px solid lightgrey;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+  }
+
+  main li:hover {
+    background-color: #fafafa;
+  }
+
+  main .dozent_name {
+    font-size: 150%;
+  }
+
+  main h1 {
+    background-color: white;
+    padding-left: 0.5em;
+    padding-top: 0.25em;
+    margin: 0;
+  }
+
+  /* AKTIONSBUTTONS */
+  main .actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  main .actions > div {
+    padding: 0.5em;
+    margin: 0.5em;
+
+    background-color: #e0e0e0;
+    transition: background-color 0.5s;
+
+    flex: 1;
+    text-align: center;
+  }
+
+  main .actions > div:first-child {
+    margin-left: 0;
+  }
+
+  main .actions > div:last-child {
+    margin-right: 0;
+  }
+
+  main .actions > div:hover {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+  }
+</style>
+
+<!-- Inhalt der Seite -->
+<main>
+  <!-- TODO: HTML-Gerüst definieren -->
+  <h1>Students</h1>
+  <ol>
+    <!-- Platzhalter für leere Liste definieren -->
+    <li class="empty-placeholder">
+      <div class="name">No entries!</div>
+    </li>
+
+    <li class="perm-placeholder hidden">
+      <div class="name">No permission!</div>
+    </li>
+
+    <li class="list-student-entry" data-id="$ID$">
+      <div class="student_name">$FIRST_NAME$ $LAST_NAME$</div>
+      <div class="student_email">Course: $COURSE$</div>
+      <div class="student_course">Course ID: $COURSE_ID$</div>
+      <div class="student_birthday">Birthday: $BIRTHDAY$</div>
+      <div class="actions">
+        <div class="action edit_student">
+          <a>Ändern</a>
+        </div>
+        <div class="action delete_student">
+          <a>Löschen</a>
+        </div>
+      </div>
+    </li>
+  </ol>
+</main>

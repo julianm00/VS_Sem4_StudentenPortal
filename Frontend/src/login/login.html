@@ -1,0 +1,155 @@
+<!-- Stylesheet der Seite -->
+<style>
+  /* TODO: Stylesheet definieren  */
+  .page-content {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(45deg, rgba(230, 230, 230, 0.2), white);
+  }
+
+  .auth-card {
+    background-color: white;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    padding: 10px 10%;
+  }
+
+  .logo-area {
+    padding: 10px 20%;
+    margin-top: 60px;
+  }
+
+  .logo {
+    width: 100%;
+    height: auto;
+  }
+
+  .auth-title {
+    text-align: center;
+    color: rgba(0, 0, 0, 1);
+  }
+
+  .service-btn {
+    border: 1px solid rgba(220, 220, 220) !important;
+    width: 100%;
+    color: rgb(45, 45, 45);
+    height: 45px;
+  }
+
+  .service-btn:hover {
+    color: orange;
+    border: 1px solid orange;
+  }
+
+  .service-icon {
+    margin-right: 10px;
+  }
+
+  .seperator {
+    width: 100%;
+    color: rgb(45, 45, 45);
+  }
+
+  .auth-input {
+    background: white;
+    height: 45px;
+    border: 1px solid rgba(220, 220, 220);
+    color: rgb(45, 45, 45);
+    box-shadow: none !important;
+  }
+
+  .auth-input:focus {
+    color: orange;
+    border: 1px solid orange;
+  }
+
+  .input-info-text {
+    color: rgba(140, 140, 140);
+  }
+
+  .auth-btn {
+    background: orange;
+    color: white;
+    height: 45px;
+    width: 100%;
+    font-size: 18px;
+    border: 1px solid rgba(220, 220, 220) !important;
+    box-shadow: none !important;
+  }
+
+  .auth-btn:hover {
+    background: rgb(190, 190, 190);
+    color: white;
+    border: 1px solid orange;
+  }
+
+  .text {
+    text-align: center;
+    color: rgb(45, 45, 45);
+  }
+
+  .text-link {
+    color: orange;
+    text-decoration: none;
+  }
+
+  .text-link:hover {
+    color: orange;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  #img {
+    width: 300px;
+    height: 100px;
+    background-image: url(../img/twitter_header_photo_1.png);
+  }
+</style>
+
+<!-- Inhalt der Seite -->
+<main>
+  <!-- TODO: HTML-Gerüst definieren -->
+  <div class="page-content d-flex align-items-center">
+    <div class="container d-flex justify-content-center">
+      <div class="col-10 col-sm-10 col-md-8 col-lg-7 col-xl-6 col-xxl-5">
+        <div class="auth-card">
+          <div class="logo-area">
+            <div id="#img"></div>
+            <img
+              class="logo"
+              src="../img/twitter_header_photo_1.png"
+              alt="Logo"
+            />
+          </div>
+          <h5 class="auth-title">Connect together!</h5>
+
+          <hr class="seperator" />
+
+          <form>
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control auth-input"
+                id="email"
+                placeholder="e-mail adresss"
+              />
+            </div>
+            <div class="mb-3">
+              <input
+                type="password"
+                class="form-control auth-input"
+                id="password"
+                placeholder="password"
+              />
+            </div>
+            <button class="btn auth-btn mt-2 mb-4">Login</button>
+          </form>
+
+          <p class="text mb-4">
+            No account yet? <a class="text-link toRegister">Register now!</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
