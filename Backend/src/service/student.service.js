@@ -32,8 +32,12 @@ export default class StudentService {
             first_name: student.first_name  || "",
             last_name:  student.last_name   || "",
             birthday:   student.birthday    || "",
+            fakultaet:  student.fakultaet   || "",
             course:     student.course      || "",
             course_id:  student.course      || "",
+            email:      student.email       || "",
+            password:   student.password    || "",
+            logged:     student.logged      || "n",
         }
 
         let result = await this._students.insertOne(newStudent);
@@ -50,7 +54,7 @@ export default class StudentService {
     /**
      * Student updaten
      */
-    async update(id) {
+    async update(id, student) {
         let oldStudent = await this._students.findOne({_id : new ObjectId(id)});
         if (!oldStudent) return;
 
@@ -64,9 +68,13 @@ export default class StudentService {
         if (student.first_name)     updateDoc.$set.first_name   = student.first_name;
         if (student.last_name)      updateDoc.$set.last_name    = student.last_name;
         if (student.birthday)       updateDoc.$set.birthday     = student.birthday;
+        if (student.fakultaet)      updateDoc.$set.fakultaet    = student.fakultaet;
         if (student.course)         updateDoc.$set.course       = student.course;
         if (student.course_id)      updateDoc.$set.course_id    = student.course_id;
-
+        if (student.email)          updateDoc.$set.email        = student.email;
+        if (student.password)       updateDoc.$set.password     = student.password;
+        if (student.logged)         updateDoc.$set.logged       = student.logged;
+    
         await this._students.updateOne({_id: new ObjectId(id)}, updateDoc);
         return await this._students.findOne({_id: new ObjectId(id)});
     }

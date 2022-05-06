@@ -27,6 +27,10 @@ class App {
                 url: "^/$",
                 show: () => this._gotoList()
             },
+            {
+                url: "^/edit/$",
+                show: () => this._gotoEdit()
+            },
             //// TODO: Eigene Routing-Regeln hier in der Mitte einfügen ////
             //// Login
             {
@@ -80,6 +84,19 @@ class App {
             let page = new PageList(this);
             await page.init();
             this._showPage(page, "list");
+        } catch (ex) {
+            this.showException(ex);
+        }
+    }
+
+    async _gotoEdit() {
+        try {
+            // Dynamischer Import, vgl. https://javascript.info/modules-dynamic-imports
+            let {default: PageEdit} = await import("./page-edit/page-edit.js");
+
+            let page = new PageEdit(this);
+            await page.init();
+            this._showPage(page, "edit");
         } catch (ex) {
             this.showException(ex);
         }

@@ -15,7 +15,6 @@ export default class Register extends Page {
     constructor(app) {
         super(app, HtmlTemplate);
 
-        this._emptyMessageElement = null;
         this._toLog = null;
 
         this._dataset_student = {
@@ -24,11 +23,7 @@ export default class Register extends Page {
             matrikel_nr: "",
             birthday: "",
             course: "",
-            course_id: ""
-        }
-
-        this._dataset_user = {
-            matrikel_nr: "",
+            course_id: "",
             email: "",
             password: ""
         }
@@ -54,68 +49,56 @@ export default class Register extends Page {
     async init() {
         // HTML-Inhalt nachladen
         await super.init();
+        await this._updateList();
         this._title = "Register";
 
-        this._updateList();
-
-        this._inputMatrikelNr = this._mainElement.querySelector("#matrikelNr");
-        this._inputEmail = this._mainElement.querySelector("#email");
-        this._inputPassword = this._mainElement.querySelector("#password");
-        this._inputPasswordRepeat = this._mainElement.querySelector("#passwordRepeat");
-        this._inputFirstName = this._mainElement.querySelector("#firstName");
-        this._inputLastName = this._mainElement.querySelector("#lastName");
+        this._inputMatrikelNr       = this._mainElement.querySelector("#matrikelNr");
+        this._inputEmail            = this._mainElement.querySelector("#email");
+        this._inputPassword         = this._mainElement.querySelector("#password");
+        this._inputPasswordRepeat   = this._mainElement.querySelector("#passwordRepeat");
+        this._inputFirstName        = this._mainElement.querySelector("#firstName");
+        this._inputLastName         = this._mainElement.querySelector("#lastName");
 
         let saveButton = this._mainElement.querySelector(".btn.auth-btn");
         saveButton.addEventListener("click", () => this._register());
 
         let toLogLink = this._mainElement.querySelector(".toLogin");
         toLogLink.addEventListener("click", () => this.toLogin());
-        //// TODO: Anzuzeigende Inhalte laden mit this._app.backend.fetch() ////
-        //// TODO: Inhalte in die HTML-Struktur einarbeiten ////
-        //// TODO: Neue Methoden für Event Handler anlegen und hier registrieren ////
     }
 
     async _register() {
         // Student
-        // Name
-        this._dataset_student.first_name = this._inputFirstName.value.trim();
-        this._dataset_student.last_name = this._inputLastName.value.trim();
-        // MarikelNr 
-        this._dataset_student.matrikel_nr = this._inputMatrikelNr.value.trim();
-
-        // User
-        // MatrikelNr
-        this._dataset_user.matrikel_nr = this._inputMatrikelNr.value.trim();
-        // Email
-        this._dataset_user.email = this._inputEmail.value.trim();
-        // Password
-        let p = this._inputPassword.value.trim();
-        let pr = this._inputPasswordRepeat.value.trim();
-
-        console.log(p); console.log(pr);
+        this._dataset_student.first_name    = this._inputFirstName.value.trim();
+        this._dataset_student.last_name     = this._inputLastName.value.trim();
+        this._dataset_student.matrikel_nr   = this._inputMatrikelNr.value.trim();
+        this._dataset_student.email         = this._inputEmail.value.trim();
+        let p                               = this._inputPassword.value.trim();
+        let pr                              = this._inputPasswordRepeat.value.trim();
 
         if (p != pr) {
             alert("Passwords are different!");
             return;
         }
 
-        this._dataset_user.password = p;
+        if (p.length < 8) {
+            alert("Passwords is less than 8 characters!");
+            return;
+        }
 
-        console.log(this._dataset_student);
-        console.log(this._dataset_user);
+        this._dataset_student.password      = p;
 
         try {
             await this._app.backend.fetch("POST", '/student', {body: this._dataset_student});
-            await this._app.backend.fetch("POST", '/user', {body: this._dataset_user});
-            location.hash = "#/login/";
         } catch (ex) {
             alert(ex);
             return;
         }
+
+        location.hash = "#/login/";
     }
 
     async _updateList() {
-        let data_cuser = await this._app.backend.fetch("GET", "/cuser");
+        let data_cuser = await this._app.backend.fetch("GET", "/student?logged=y");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");

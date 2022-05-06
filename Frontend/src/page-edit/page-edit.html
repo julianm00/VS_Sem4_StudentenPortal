@@ -1,0 +1,133 @@
+<!-- Stylesheet der Seite -->
+<style>
+  /* FORMULARFELDER */
+  main {
+    background-color: white;
+    padding: 1em;
+  }
+
+  main .form > * {
+    display: block;
+    width: 100%;
+
+    border: 0px solid lightgrey;
+    border-bottom-width: 1px;
+
+    padding: 0.5em 0 0.5em 0;
+    margin-bottom: 1em;
+  }
+
+  /* AKTIONSBUTTONS */
+  main .actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  main .actions > div {
+    padding: 0.5em;
+    margin: 0.5em;
+
+    background-color: #e0e0e0;
+    transition: background-color 0.5s;
+
+    flex: 1;
+    text-align: center;
+  }
+
+  main .actions > div:first-child {
+    margin-left: 0;
+  }
+
+  main .actions > div:last-child {
+    margin-right: 0;
+  }
+
+  main .actions > div:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+  }
+</style>
+
+<!-- Inhalt der Seite -->
+<main>
+  <div>
+    <div class="data" id="user">
+      <div class="header">
+        <h2>Meine Daten</h2>
+        <div class="actions">
+          <div class="action" id="edit1">
+            <a>✏️</a>
+          </div>
+        </div>
+      </div>
+      <div class="dataset">
+        <div class="data-row1">
+          <div id="fn">$FN$</div>
+          <div id="ln">$LN$</div>
+          <div id="bd">$BD$</div>
+        </div>
+        <div class="data-row2">
+          <div id="fk">$FAK$</div>
+          <div id="dir">$DIR$</div>
+          <div id="c_id">$C_ID$</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="data hidden" id="user-edit">
+      <div class="header">
+        <h2>Daten ändern</h2>
+      </div>
+      <div class="dataset">
+        <div class="data-row1">
+            <input id="fn_in" placeholder="Vorname" value="$FN$" />
+            <input id="ln_in" placeholder="Nachname" value="$LN$" />
+            <input id="bd_in" placeholder="Geburtstag" value="$BD$" type="date"/>
+        </div>
+        <div class="data-row2">
+            <input id="fak_in" placeholder="Fakultät" value="$FAK$" />
+            <input id="dir_in" placeholder="Studienrichtung" value="DIR$" />
+            <input id="c_id_in" placeholder="Kursnummer" value="$C_ID$" />
+        </div>
+      </div>
+      <div class="actions">
+        <div class="action" id="save1">
+            <a>💾</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="data" id="security">
+      <div class="header">
+        <h2>Logindaten</h2>
+        <div class="actions">
+          <div class="action" id="edit2">
+            <a>✏️</a>
+          </div>
+        </div>
+      </div>
+      <div class="dataset">
+        <div class="data-row1">
+          <div id="email">$EMAIL$</div> 
+        </div>
+      </div>
+    </div>
+    
+    <div class="data hidden" id="security-edit">
+      <div class="header">
+        <h2>Daten Ändern</h2>
+      </div>
+      <div class="dataset form">
+        <div class="data-row1">
+            <input type="email" id="email_in">
+            <input type="password" id="pw_in" placeholder="Password"></input>
+            <input type="password" id="pwr_in" placeholder="Repeat password"></input>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="action" id="save2">
+            <a>💾</a>
+        </div>
+      </div>
+  </div>
+</main>

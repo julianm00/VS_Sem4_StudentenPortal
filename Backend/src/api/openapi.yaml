@@ -73,6 +73,21 @@ paths:
           in: query
           name: matrikel_nr
           description: Gesuchte Matrikelnummer
+        - schema:
+            type: string
+          in: query
+          description: Gesuchte Fakultät
+          name: fakultaet
+        - schema:
+            type: string
+          in: query
+          name: email
+          description: Gesuchte Email
+        - schema:
+            type: string
+          in: query
+          name: logged
+          description: Suchen ob Student eingeloggt ist
     post:
       summary: Neuer Student anlegen
       tags:
@@ -312,234 +327,6 @@ paths:
           description: Not Found
       operationId: delete-address-id
       description: Adressbucheintrag löschen
-  /user:
-    get:
-      summary: Userliste durchsuchen
-      tags:
-        - Userliste
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
-      operationId: get-user
-      description: Userliste durchsuchen
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: matrikel_nr
-          description: Matrikelnummer suchen
-        - schema:
-            type: string
-          in: query
-          name: email
-          description: Email suchen
-        - schema:
-            type: string
-          in: query
-          name: password
-          description: Passwort suchen
-    post:
-      summary: Neue Adresse anlege
-      tags:
-        - Userliste
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-      operationId: post-user
-      description: User erstellen
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-        description: User Parameter über JSON
-  "/user/{id}":
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-    get:
-      summary: User lesen
-      tags:
-        - User
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "404":
-          description: Not Found
-      operationId: get-user-id
-      description: Einzelnen User erhalten
-    put:
-      summary: User überschreiben
-      tags:
-        - User
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "404":
-          description: Not Found
-      operationId: put-user-id
-      description: Daten User überschreiben
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-        description: User Body
-    patch:
-      summary: Einzelnes Feld überschreiben
-      tags:
-        - User
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-      operationId: patch-user-id
-      description: Einzelnes Feld überschreiben
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-        description: Einzelne Felder überschreiben
-    delete:
-      summary: User löschen
-      tags:
-        - User
-      responses:
-        "204":
-          description: No Content
-      operationId: delete-user-id
-      description: User löschen
-  /cuser:
-    get:
-      summary: Cuserliste durchsuchen
-      tags:
-        - Cuserliste
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Current_User"
-      operationId: get-cuser
-      description: Cuserliste erhalten
-    post:
-      summary: Cuser erstellen
-      tags:
-        - Cuserliste
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Current_User"
-      operationId: post-cuser
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Current_User"
-        description: Cuser Body
-      description: Cuser erstellen
-  "/cuser/{id}":
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-    get:
-      summary: Einzelnen Cuser erhalten
-      tags:
-        - Cuser
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Current_User"
-      operationId: get-cuser-id
-      description: Einzelnen Cuser erhalten
-    put:
-      summary: Cuser überschreiben
-      tags:
-        - Cuser
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Current_User"
-        "404":
-          description: Not Found
-      operationId: put-cuser-id
-      description: Cuser überschreiben
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Current_User"
-        description: Cuser Body
-    patch:
-      summary: Einzelnes Feld überschreiben
-      tags:
-        - Cuser
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Current_User"
-        "404":
-          description: Not Found
-      operationId: patch-cuser-id
-      description: Einzelne Fleder überschreiben
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Current_User"
-        description: Einzelne Felder
-    delete:
-      summary: Cuser löschen
-      tags:
-        - Cuser
-      responses:
-        "204":
-          description: No Content
-      operationId: delete-cuser-id
-      description: Cuser löschen
 components:
   schemas:
     Student:
@@ -562,50 +349,14 @@ components:
           type: string
         birthday:
           type: string
-        course:
-          type: string
-        course_id:
-          type: string
-    User:
-      title: User
-      type: object
-      description: Ein Eintrag in der User-Tabelle um den Login zu authentifizieren.
-      properties:
-        _links:
-          $ref: "#/components/schemas/HATEOAS_Resource"
-        _id:
-          type: string
-        matrikel_nr:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-    Current_User:
-      title: Current_User
-      type: object
-      properties:
-        _links:
-          $ref: "#/components/schemas/HATEOAS_Resource"
-        _id:
-          type: string
-        matrikel_nr:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-        birthday:
+        fakultaet:
           type: string
         course:
           type: string
         course_id:
           type: string
-      description: Aktueller eingeloggter Nutzer
+        logged:
+          type: string
     Address:
       title: Address
       type: object
@@ -661,16 +412,8 @@ components:
           items:
             type: string
 tags:
-  - name: Cuser
-  - name: Cuserliste
-  - name: Dozent
-  - name: Dozentenliste
+  - name: Adresse
+  - name: Adressliste
   - name: Start
   - name: Student
   - name: Studentenliste
-  - name: User
-  - name: Userliste
-  - name: Vorlesung
-  - name: Vorlesungsliste
-  - name: Adresse
-  - name: Adressliste

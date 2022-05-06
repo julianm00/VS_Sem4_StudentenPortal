@@ -18,6 +18,8 @@ export default class PageList extends Page {
         this._emptyMessageElement = null;
         this._permMessageElement = null;
 
+        this._dataset_student = null;
+
     }
 
     /**
@@ -33,21 +35,20 @@ export default class PageList extends Page {
     async init() {
         // HTML-Inhalt nachladen
         await super.init();
+        await this._updateList();
         this._title = "Übersicht";
-        
-        let data_student = await this._app.backend.fetch("GET", "/student");
-        let data_cuser = await this._app.backend.fetch("GET", "/cuser");
+
+        let data_logged = await this._app.backend.fetch("GET", "/student?logged=y");
+        let data_student = await this._app.backend.fetch("GET", "/student?logged=n");
 
         this._emptyMessageElement = this._mainElement.querySelector(".empty-placeholder");
         this._permMessageElement = this._mainElement.querySelector(".perm-placeholder");
-
-        this._updateList();
 
         if(data_student.length) {
             this._emptyMessageElement.classList.add("hidden");
         }
 
-        if(!data_cuser.length) {
+        if(!data_logged.length) {
             location.hash = "#/login/";
             return;
         }
@@ -62,11 +63,11 @@ export default class PageList extends Page {
             let dataset_student = data_student[index];
             let htmlStudent = templateStudentHtml;
 
-            let first_name = dataset_student.first_name;
-            let last_name = dataset_student.last_name;
-            let birthday = dataset_student.birthday;
-            let course = dataset_student.course;
-            let course_id = dataset_student.course_id;
+            let first_name  = dataset_student.first_name;
+            let last_name   = dataset_student.last_name;
+            let birthday    = dataset_student.birthday;
+            let course      = dataset_student.course;
+            let course_id   = dataset_student.course_id;
 
             htmlStudent = htmlStudent.replace("$FIRST_NAME$", first_name);
             htmlStudent = htmlStudent.replace("$LAST_NAME$", last_name);
@@ -74,7 +75,7 @@ export default class PageList extends Page {
             htmlStudent = htmlStudent.replace("$COURSE$", course);
             htmlStudent = htmlStudent.replace("$COURSE_ID$", course_id);
 
-            if(data_cuser.length) {
+            if(data_logged.length) {
                 let dummyStudentElement = document.createElement("div");
                 dummyStudentElement.innerHTML = htmlStudent;
                 let liStudentElement = dummyStudentElement.firstElementChild;
@@ -82,22 +83,14 @@ export default class PageList extends Page {
                 olStudentElement.appendChild(liStudentElement);
             }
 
-            //// TODO: Neue Methoden für Event Handler anlegen und hier registrieren ////
-            /**liDozentElement.querySelector(".action.edit_dozent").addEventListener("click", () => location.hash = `#/editDozent/${dataset_dozent._id}`);
-            liDozentElement.querySelector(".action.delete_dozent").addEventListener("click", () => this._askDelete(dataset_dozent._id));*/
         }
 
         let logout = document.querySelector("#logout-btn");
         logout.addEventListener("click", () => this._logout());
-
-        //// TODO: Anzuzeigende Inhalte laden mit this._app.backend.fetch() ////
-        //// TODO: Inhalte in die HTML-Struktur einarbeiten ////
-        //// TODO: Neue Methoden für Event Handler anlegen und hier registrieren ////
     }
-
     
     async _updateList() {
-        let data_cuser = await this._app.backend.fetch("GET", "/cuser");
+        let data_cuser = await this._app.backend.fetch("GET", "/student?logged=y");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -124,43 +117,14 @@ export default class PageList extends Page {
     async _logout() {
         console.log("Logout");
 
-        let data_cuserList = await this._app.backend.fetch("GET", "/cuser");
-        console.log(data_cuserList);
+        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
+        this._dataset_student = data_student[0];
 
-        let data_cuser = data_cuserList[0];
+        let stringID = "/student/" + this._dataset_student._id;
+        this._dataset_student.logged = "n";
 
-        let _newStudent = {
-            matrikel_nr: data_cuser.matrikel_nr,
-            first_name: data_cuser.first_name,
-            last_name: data_cuser.last_name,
-            birthday: data_cuser.birthday,
-            course: data_cuser.course,
-            course_id: data_cuser.course_id,
-        }
-
-        let _newUser = {
-            matrikel_nr: data_cuser.matrikel_nr,
-            email: data_cuser.email,
-            password: data_cuser.password
-        }
-
-        console.log(_newUser);
-
-        await this._app.backend.fetch("POST", "/student", {body: _newStudent});
-        await this._app.backend.fetch("POST", "/user", {body: _newUser});
-
-        console.log("POSTED");
-
-        let deleteString = '/cuser/' + data_cuser._id;
-        
-        try {
-            await this._app.backend.fetch("DELETE", deleteString);
-            console.log("DELETED");
-        } catch {
-            console.log("Fehler wegen Gateway Spezifikation, da leeres JSON");
-        }
+        await this._app.backend.fetch("PUT", stringID, {body: this._dataset_student});
 
         location.hash = "#/";
-
     }
 };

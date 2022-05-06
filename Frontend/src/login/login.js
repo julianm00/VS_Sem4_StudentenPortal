@@ -18,17 +18,7 @@ export default class Register extends Page {
         this._emptyMessageElement = null;
         this._toReg = null;
 
-        this._dataset_cuser = {
-            matrikel_nr: "",
-            first_name: "",
-            last_name: "",
-            birthday: "",
-            course: "",
-            course_id: "",
-            email: "",
-            password: ""
-        }
-
+        this._dataset_student = null;
 
         this._inputEmail = null,
         this._inputPassword = null;
@@ -47,7 +37,7 @@ export default class Register extends Page {
     async init() {
         // HTML-Inhalt nachladen
         await super.init();
-        this._title = "Register";
+        this._title = "Login";
 
         this._updateList();
 
@@ -59,71 +49,34 @@ export default class Register extends Page {
 
         let toRegLink = this._mainElement.querySelector(".toRegister");
         toRegLink.addEventListener("click", () => this.toRegister());
-        //// TODO: Anzuzeigende Inhalte laden mit this._app.backend.fetch() ////
-        //// TODO: Inhalte in die HTML-Struktur einarbeiten ////
-        //// TODO: Neue Methoden für Event Handler anlegen und hier registrieren ////
     }
 
     async _login() {
-            if (this._inputEmail.value.trim() == "" || this._inputPassword.value.trim() == "") {
-                alert("Password or Email missing!");
-                return;
-            }
-            // User erhalten
-            let getStringUser = '/user?email=' + this._inputEmail.value.trim();
-            let _data_user = await this._app.backend.fetch("GET", getStringUser);
-            console.log(_data_user);
+        if (this._inputEmail.value.trim() == "" || this._inputPassword.value.trim() == "") {
+            alert("Password or Email missing!");
+            return;
+        }
+        // User erhalten
+        let getStringUser = '/student?email=' + this._inputEmail.value.trim();
+        let data_student = await this._app.backend.fetch("GET", getStringUser);
+        this._dataset_student = data_student[0];
             
-            let p = this._inputPassword.value.trim();
-            if (p != _data_user[0].password) {
-                alert("Wrong password!");
-                return;
-            }
+        let p = this._inputPassword.value.trim();
+        if (p != this._dataset_student.password) {
+            alert("Wrong password!");
+            return;
+        }
 
-            let getStringStudent = '/student?matrikel_nr=' + _data_user[0].matrikel_nr;
-            let _data_student = await this._app.backend.fetch("GET", getStringStudent);
-            console.log(getStringStudent);
+        let stringID = "/student/" + this._dataset_student._id;
 
-            this._dataset_cuser.matrikel_nr = _data_student[0].matrikel_nr;
-            this._dataset_cuser.first_name  = _data_student[0].first_name;
-            this._dataset_cuser.last_name   = _data_student[0].last_name;
-            this._dataset_cuser.birthday    = _data_student[0].birthday;
-            this._dataset_cuser.course      = _data_student[0].course;
-            this._dataset_cuser.course_id   = _data_student[0].course_id;
-            this._dataset_cuser.email       = _data_user[0].email;
-            this._dataset_cuser.password    = _data_user[0].password;
+        this._dataset_student.logged = "y";
 
-            console.log(this._dataset_cuser);
-
-            let id_student = _data_student[0]._id;
-            let id_user = _data_user[0]._id;
-            
-            let stringDelS = "/student/" + id_student;
-            let stringDelU = "/user/" + id_user;
-
-            await this._app.backend.fetch("POST", '/cuser', {body: this._dataset_cuser});
-            console.log("added");
-             
-            try {
-                await this._app.backend.fetch("DELETE", stringDelS);
-            } catch (ex) {
-                console.log("Fehler wegen Gateway Spezifikation, da leeres JSON");
-            }
-
-            try {
-                await this._app.backend.fetch("DELETE", stringDelU);
-            } catch (ex2) {
-                console.log("Fehler wegen Gateway Spezifikation, da leeres JSON");
-            }
-
-            location.hash = "#/";
-
+        let a = await this._app.backend.fetch("PUT", stringID, {body: this._dataset_student});
+        location.hash = "#/";
     }
 
-    
-
     async _updateList() {
-        let data_cuser = await this._app.backend.fetch("GET", "/cuser");
+        let data_cuser = await this._app.backend.fetch("GET", "/student?logged=y");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");

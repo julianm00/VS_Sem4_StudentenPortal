@@ -31,8 +31,6 @@ class DatabaseFactory {
      * wenigstens gleich ein paar Daten.
      */
     async _createDemoData() {
-        //// TODO: Methode anpassen, um zur eigenen App passende Demodaten anzulegen ////
-        //// oder die Methode ggf. einfach löschen und ihren Aufruf oben entfernen.  ////
         let students = this.database.collection("students");
         let users = this.database.collection("users")
         let addresses = this.database.collection("addresses");
@@ -45,58 +43,25 @@ class DatabaseFactory {
                     first_name: "Max",
                     last_name: "Mustermann",
                     birthday: "19.01.2000",
+                    fakultaet: "Wirtschaft",
                     course: "Software Engineering",
-                    course_id: "WWI20B4"
+                    course_id: "WWI20B4",
+                    email: "max.mustermann@dhbw.de",
+                    password: "ABC123",
+                    logged: "n"
                 },
                 {
                     matrikel_nr: "1000001",
                     first_name: "Maike",
                     last_name: "Musterfrau",
                     birthday: "19.01.1998",
+                    fakultaet: "Wirtschaft",
                     course: "Data Science",
-                    course_id: "WWI20B2"
-                },
-            ]);
-
-            users.insertMany([
-                {
-                    matrikel_nr: "1000000",
-                    email: "max.mustermann@dhbw.de",
-                    password: "ABC123"
-                },
-                {
-                    matrikel_nr: "1000001",
+                    course_id: "WWI20B2",
                     email: "maike.musterfrau@dhbw.de",
-                    password: "ABC123"
-                }
-            ]);
-
-            addresses.insertMany([
-                {
-                    first_name: "Max",
-                    last_name: "Mustermann",
-                    phone: "1123456",
-                    email: "test@beispiel.de",
+                    password: "ABC123",
+                    logged: "n"
                 },
-                {
-                    first_name: "Erika",
-                    last_name: "Musterfrau",
-                    phone: "1123456",
-                    email: "test@beispiel.de",
-                },
-            ]);
-            
-            cusers.insertMany([
-                {
-                    matrikel_nr: "1000000",
-                    first_name: "Max",
-                    last_name: "Mustermann",
-                    birthday: "19.01.2000",
-                    course: "Software Engineering",
-                    course_id: "WWI20B4",
-                    email: "max.mustermann@dhbw.de",
-                    password: "ABC123"
-                }
             ]);
         }
     };
