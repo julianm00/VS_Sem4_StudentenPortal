@@ -17,8 +17,17 @@ export default class PageList extends Page {
         super(app, HtmlTemplate);
 
         this._emptyMessageElement = null;
-        this._permMessageElement = null;
 
+        this._fakSel = null;
+        this._kursSel = null;
+        this._dirSel = null;
+        this._numSel = null;
+
+        this._dataLoggedStudent = null;
+        this._dataLoggedStudentDataset = null;
+
+        this._templateStudentDiv = null;
+        this._saveContent = null
     }
 
     /**
@@ -32,26 +41,187 @@ export default class PageList extends Page {
      * zu beeinflussen.
      */
     async init() {
-        let data_logged = await this._app.backend.fetch("GET", "/student?logged=y");
         // HTML-Inhalt nachladen
         await super.init();
-        this._updateList();
+        await this._updateList();
         this._title = "Übersicht";
 
-        if(!data_logged.length) {
+        if(!this._dataLoggedStudent) {
             location.hash = "#/login/";
             return;
         }
 
-        let data_student = await this._app.backend.fetch("GET", "/student?logged=n");
+        this._templateStudentDiv = this._mainElement.querySelector(".student-entry");
+        let data_student = await this._showStudents("");
 
-        this._emptyMessageElement = this._mainElement.querySelector(".empty-placeholder");
-        this._permMessageElement = this._mainElement.querySelector(".perm-placeholder");
+        this.updateSelector(data_student, "#kurs", "course");
+        this.updateSelector(data_student, "#fak", "fakultaet");
+        this.updateSelector(data_student, "#richtung", "direction");
+        this.updateSelector(data_student, "#nummer", "course_id");
+
+        let logout = document.querySelector("#logout-btn");
+        logout.addEventListener("click", () => this._logout());
+
+        let filter = this._mainElement.querySelector("#filter");
+        filter.addEventListener("click", () => this.showMenu());
+
+        this._fakSel = this._mainElement.querySelector("#fak");
+        this._fakSel.addEventListener("change", () => this._updateStudentsFak());
+        
+        this._kursSel = this._mainElement.querySelector("#kurs");
+        this._kursSel.addEventListener("change", () => this._updateStudentsKurs());
+
+        this._dirSel = this._mainElement.querySelector("#richtung");
+        this._dirSel.addEventListener("change", () => this._updateStudentsDir());
+
+        this._numSel = this._mainElement.querySelector("#nummer");
+        this._numSel.addEventListener("change", () => this._updateStudentsNum());
+
+        if(this._dataLoggedStudentDataset.reminder == "y") {
+            swal({
+                title: "Reminder",
+                text: "Sie haben noch nich alle Ihre Daten festgelegt!|Füllen Sie die Daten bitte, sodass ihre Komolitonen Sie finden können.",
+                icon: "info",
+                buttons: {
+                    cancel: "Schließen",
+                    rem: "Nicht mehr erinnern",
+                    go: "Los gehts!"
+                }
+            })
+            .then((async value =>  {    
+                switch(value) {
+                    case "cancel":
+                        break;
+                    case "rem":
+                        let stringID = "/student/" + this._dataLoggedStudentDataset._id;
+                        this._dataLoggedStudentDataset.reminder = "n";
+                        await this._app.backend.fetch("PUT", stringID, {body: this._dataLoggedStudentDataset});
+                        break;
+                    case "go":
+                        location.hash = "#/edit/";
+                    return;
+                }
+
+        }));
+        }
+
+    }
+    
+    async _updateList() {
+        this._dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
+        this._dataLoggedStudentDataset = this._dataLoggedStudent[0];
+
+        document.querySelector("#lin1").classList.add("hidden");
+        document.querySelector("#lin2").classList.add("hidden");
+        document.querySelector("#lin3").classList.add("hidden");
+
+        document.querySelector("#lout1").classList.add("hidden");
+        document.querySelector("#lout2").classList.add("hidden");
+
+        if (!this._dataLoggedStudent) {
+            document.querySelector("#lout1").classList.remove("hidden");
+            document.querySelector("#lout2").classList.remove("hidden");
+
+        } else {
+            document.querySelector("#lin1").classList.remove("hidden");
+            document.querySelector("#lin2").classList.remove("hidden");
+            document.querySelector("#lin3").classList.remove("hidden");
+
+            document.querySelector("#lout1").classList.add("hidden");
+            document.querySelector("#lout2").classList.add("hidden");
+        }
+
+    }
+
+    async _logout() {
+        let stringID = "/student/" + this._dataLoggedStudentDataset._id;
+        this._dataLoggedStudentDataset.logged = "n";
+
+        await this._app.backend.fetch("PUT", stringID, {body: this._dataLoggedStudentDataset});
+
+        location.hash = "#/login/";
+    }
+
+    async _updateStudentsFak() {
+        let getValue;
+
+        this._dirSel.value = "";
+        this._numSel.value = "";
+        this._kursSel.value = "";
 
         let divStudentElement = this._mainElement.querySelector(".students");
-        let templateStudentDiv = this._mainElement.querySelector(".student-entry");
-        let templateStudentDivHtml = templateStudentDiv.outerHTML;
-        templateStudentDiv.remove();
+        divStudentElement.innerHTML = "";
+
+        if (this._fakSel.value == "") {
+            console.log("Test");
+            await this._showStudents("");
+            return;
+        } else {
+            getValue = "&fakultaet=" + encodeURIComponent(this._fakSel.value);
+            await this._showStudents(getValue);
+        }
+    }
+
+    async _updateStudentsNum() {
+        let getValue;
+
+        this._dirSel.value = "";
+        this._fakSel.value = "";
+        this._kursSel.value = "";
+
+        let divStudentElement = this._mainElement.querySelector(".students");
+        divStudentElement.innerHTML = "";
+
+        if (this._numSel.value == "") {
+            await this._showStudents("");
+            return;
+        } else {
+            getValue = "&course_id=" + encodeURIComponent(this._numSel.value);
+            await this._showStudents(getValue);
+        }
+    }
+
+    async _updateStudentsDir() {
+        let getValue;
+
+        this._numSel.value = "";
+        this._fakSel.value = "";
+        this._kursSel.value = "";
+
+        let divStudentElement = this._mainElement.querySelector(".students");
+        divStudentElement.innerHTML = "";
+
+        if (this._dirSel.value == "") {
+            await this._showStudents("");
+            return;
+        } else {
+            getValue = "&direction=" + encodeURIComponent(this._dirSel.value);
+            await this._showStudents(getValue);
+        }
+    }
+
+    async _updateStudentsKurs() {
+        let getValue;
+
+        this._numSel.value = "";
+        this._fakSel.value = "";
+        this._dirSel.value = "";
+
+        let divStudentElement = this._mainElement.querySelector(".students");
+        divStudentElement.innerHTML = "";
+
+        if (this._kursSel.value == "") {
+            await this._showStudents("");
+            return;
+        } else {
+            getValue = "&course=" + encodeURIComponent(this._kursSel.value);
+            await this._showStudents(getValue);
+        }
+    }
+
+    async _showStudents(val) {
+        let getString = "/student?logged=n" + val;
+        let data_student = await this._app.backend.fetch("GET", getString);
 
         if(!data_student.length) {
             swal({
@@ -60,6 +230,10 @@ export default class PageList extends Page {
                 icon: "info",
             });
         }
+        
+        let divStudentElement = this._mainElement.querySelector(".students");
+        let templateStudentDivHtml = this._templateStudentDiv.outerHTML;
+        this._templateStudentDiv.remove();
 
         for(let index in data_student) {
             let dataset_student = data_student[index];
@@ -84,48 +258,7 @@ export default class PageList extends Page {
             divStudentElement.appendChild(liStudentElement);
         }
 
-        let logout = document.querySelector("#logout-btn");
-        logout.addEventListener("click", () => this._logout());
-
-        let filter = this._mainElement.querySelector("#filter");
-        filter.addEventListener("click", () => this.showMenu());
-    }
-    
-    async _updateList() {
-        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
-
-        document.querySelector("#lin1").classList.add("hidden");
-        document.querySelector("#lin2").classList.add("hidden");
-        document.querySelector("#lin3").classList.add("hidden");
-
-        document.querySelector("#lout1").classList.add("hidden");
-        document.querySelector("#lout2").classList.add("hidden");
-
-        if (!data_student.length) {
-            document.querySelector("#lout1").classList.remove("hidden");
-            document.querySelector("#lout2").classList.remove("hidden");
-
-        } else {
-            document.querySelector("#lin1").classList.remove("hidden");
-            document.querySelector("#lin2").classList.remove("hidden");
-            document.querySelector("#lin3").classList.remove("hidden");
-
-            document.querySelector("#lout1").classList.add("hidden");
-            document.querySelector("#lout2").classList.add("hidden");
-        }
-
-    }
-
-    async _logout() {
-        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
-        let dataset_student = data_student[0];
-
-        let stringID = "/student/" + dataset_student._id;
-        dataset_student.logged = "n";
-
-        await this._app.backend.fetch("PUT", stringID, {body: dataset_student});
-
-        location.hash = "#/login/";
+        return data_student;
     }
 
     showMenu() {
@@ -136,5 +269,22 @@ export default class PageList extends Page {
             filterMenu.classList.add("hidden");
         }
 
+    }
+
+    updateSelector(data, selectID, option) {
+        let array = []; 
+        let uniques = []
+        for(let index in data) {
+            let dataset_student = data[index];
+            array.push(dataset_student[option])
+            uniques = [...new Set(array)]
+            uniques.sort();
+        }
+
+        let select = this._mainElement.querySelector(selectID);
+        for (let index in uniques) {
+            let option = new Option(uniques[index], uniques[index]);
+            select.add(option);
+        } 
     }
 };
