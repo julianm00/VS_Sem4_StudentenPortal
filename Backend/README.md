@@ -1,8 +1,6 @@
 SPA/REST-Vorlage: Backend
 =========================
 
-__TODO: Dokument überarbeiten__
-
 Inhaltsverzeichnis
 ------------------
 
@@ -16,7 +14,7 @@ Inhaltsverzeichnis
 Kurzbeschreibung
 ----------------
 
-Dies ist der backendseitige REST-Webservice der Beispiel-App. Es handelt sich
+Dies ist der backendseitige REST-Webservice der Studentenportal StudentSocial. Es handelt sich
 um ein einfaches nodeJS-Projekt mit dem Webframework [Restify](http://restify.com/).
 Die Schnittstelle des Webservices ist in der Datei `src/api/openapi.yaml`
 beschrieben.
