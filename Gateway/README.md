@@ -1,4 +1,4 @@
-SPA/REST-Vorlage: Gateway
+Studentenportal StudentSocial: Gateway
 =========================
 
 __TODO: Dokument überarbeiten__
