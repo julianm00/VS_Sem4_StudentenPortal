@@ -80,7 +80,7 @@ export default class PageList extends Page {
         if(this._dataLoggedStudentDataset.reminder == "y") {
             swal({
                 title: "Reminder",
-                text: "Sie haben noch nich alle Ihre Daten festgelegt!|Füllen Sie die Daten bitte, sodass ihre Komolitonen Sie finden können.",
+                text: "Sie haben noch nich alle Ihre Daten festgelegt!\nFüllen Sie die Daten bitte, sodass ihre Komolitonen Sie finden können.",
                 icon: "info",
                 buttons: {
                     cancel: "Schließen",
