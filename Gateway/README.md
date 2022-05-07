@@ -1,8 +1,6 @@
 Studentenportal StudentSocial: Gateway
 =========================
 
-__TODO: Dokument überarbeiten__
-
 Inhaltsverzeichnis
 ------------------
 
