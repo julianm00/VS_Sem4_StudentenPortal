@@ -1,5 +1,6 @@
 "use strict";
 
+import swal from "sweetalert";
 import Page from "../page.js";
 import HtmlTemplate from "./page-list.html";
 
@@ -44,21 +45,51 @@ export default class PageList extends Page {
         }
 
         let data_student = await this._app.backend.fetch("GET", "/student?logged=n");
-        console.log(data_student);
 
         this._emptyMessageElement = this._mainElement.querySelector(".empty-placeholder");
         this._permMessageElement = this._mainElement.querySelector(".perm-placeholder");
 
-        if(data_student.length) {
-            this._emptyMessageElement.classList.add("hidden");
+        let divStudentElement = this._mainElement.querySelector(".students");
+        let templateStudentDiv = this._mainElement.querySelector(".student-entry");
+        let templateStudentDivHtml = templateStudentDiv.outerHTML;
+        templateStudentDiv.remove();
+
+        if(!data_student.length) {
+            swal({
+                title: "Hoppla",
+                text: "Scheinbar gibt es noch keine anderen Studenten hier im Portal!\nLade deine Freunde an der DHBW gerne ein!",
+                icon: "info",
+            });
         }
 
-        let olStudentElement = this._mainElement.querySelector("ol");
+        for(let index in data_student) {
+            let dataset_student = data_student[index];
+            let htmlStudent = templateStudentDivHtml;
+
+            let first_name  = dataset_student.first_name;
+            let last_name   = dataset_student.last_name;
+            let birthday    = dataset_student.birthday;
+            let course      = dataset_student.course;
+            let course_id   = dataset_student.course_id;
+
+            htmlStudent = htmlStudent.replace("$FIRST_NAME$", first_name);
+            htmlStudent = htmlStudent.replace("$LAST_NAME$", last_name);
+            htmlStudent = htmlStudent.replace("$BIRTHDAY$", birthday);
+            htmlStudent = htmlStudent.replace("$COURSE$", course);
+            htmlStudent = htmlStudent.replace("$COURSE_ID$", course_id);
+
+            let dummyStudentElement = document.createElement("div");
+            dummyStudentElement.innerHTML = htmlStudent;
+            let liStudentElement = dummyStudentElement.firstElementChild;
+            liStudentElement.remove();
+            divStudentElement.appendChild(liStudentElement);
+        }
+
+        /*let olStudentElement = this._mainElement.querySelector("ol");
 
         let templateStudentElement = this._mainElement.querySelector(".list-student-entry");
-        let templateStudentHtml = templateStudentElement.outerHTML;
-        templateStudentElement.remove();
-
+        let templateStudentHtml = templateStudentElement.outerHTML; 
+        templateStudentElement.remove(); 
         for(let index in data_student) {
             let dataset_student = data_student[index];
             let htmlStudent = templateStudentHtml;
@@ -83,7 +114,7 @@ export default class PageList extends Page {
                 olStudentElement.appendChild(liStudentElement);
             }
 
-        }
+        } */
 
         let logout = document.querySelector("#logout-btn");
         logout.addEventListener("click", () => this._logout());

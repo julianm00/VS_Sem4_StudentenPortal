@@ -83,23 +83,17 @@ export default class Register extends Page {
         let data_allStudents = await this._app.backend.fetch("GET", "/student");
         this._dataset_student = data_student[0];
 
-        // Email vorhanden
-        let emailEnthalten = false;
-        for (let index in data_allStudents) {
-            let student_dataset = data_allStudents[index];
-            if (this._dataset_student.email == student_dataset.email) {
-                emailEnthalten = true;
-            }
-        }
-        if (!emailEnthalten) {
+        console.log(this.data_student);
+
+        if (!this._dataset_student) {
             swal({
                 title: "Achtung",
                 text: "Die eingegebene E-Mail nicht registriert.\nBitte überprüfen sie die E-Mail oder registrieren Sie sich.",
-                icon: "error",
+                 icon: "error",
             });
             return;
         }
-    
+
         let p = this._inputPassword.value.trim();
         if (p != this._dataset_student.password) {
             swal({

@@ -46,7 +46,7 @@ class DatabaseFactory {
                     fakultaet: "Wirtschaft",
                     course: "Software Engineering",
                     course_id: "WWI20B4",
-                    email: "max.mustermann@dhbw.de",
+                    email: "max.mustermann@dh-karlsruhe.de",
                     password: "ABC123",
                     logged: "n"
                 },
@@ -58,7 +58,7 @@ class DatabaseFactory {
                     fakultaet: "Wirtschaft",
                     course: "Data Science",
                     course_id: "WWI20B2",
-                    email: "maike.musterfrau@dhbw.de",
+                    email: "maike.musterfrau@dh-karlsruhe.de",
                     password: "ABC123",
                     logged: "n"
                 },
