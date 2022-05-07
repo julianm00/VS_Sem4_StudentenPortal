@@ -81,13 +81,23 @@ paths:
         - schema:
             type: string
           in: query
-          name: email
-          description: Gesuchte Email
+          name: logged
+          description: Suchen ob Student eingeloggt ist
         - schema:
             type: string
           in: query
-          name: logged
-          description: Suchen ob Student eingeloggt ist
+          name: direction
+          description: Gesuchte Studienrichtung
+        - schema:
+            type: string
+          in: query
+          name: email
+          description: Gesuchte E-Mail
+        - schema:
+            type: string
+          in: query
+          name: reminder
+          description: Suche ob Notofikation erwünscht ist
     post:
       summary: Neuer Student anlegen
       tags:
@@ -194,139 +204,6 @@ paths:
           description: OK
       operationId: get-openapi.yaml
       description: Anzeige der OpenAPI des Webservices
-  /address:
-    get:
-      summary: Adressliste durchsuchen
-      tags:
-        - Adressliste
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Address"
-      operationId: get-address
-      description: Adressen suchen. Für die Suche können über die URL verschiedene Suchparameter wie der Vorname oder Nachname mitgegeben werden. Als Antwort wird immer eine Liste mit den gefundenen Adressen geliefert.
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: first_name
-          description: Gesuchter Vorname
-        - schema:
-            type: string
-          in: query
-          name: last_name
-          description: Gesuchter Nachname
-        - schema:
-            type: string
-          in: query
-          name: phone
-          description: Gesuchte Telefonnummer
-        - schema:
-            type: string
-          in: query
-          name: email
-          description: Gesuchte E-Mailadresse
-    post:
-      summary: Neue Adresse anlegen
-      tags:
-        - Adressliste
-      responses:
-        "201":
-          description: Created
-          headers:
-            location:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Address"
-      operationId: post-address
-      description: "Eine neue Adresse anlegen. Hierzu muss ein vollständiges Adressobjekt mit mindestens dem Vornamen und Nachnamen an den Server geschickt werden. Die ID wird beim Speichern von der Datenbank vergeben und kann deshalb vom Client nicht selbst gewählt werden. Ist sie in der Anfrage enthalten, wird sie vom Server ignoriert."
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Address"
-  "/address/{id}":
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-    get:
-      summary: Adresse lesen
-      tags:
-        - Adresse
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Address"
-        "404":
-          description: Not Found
-      operationId: get-address-id
-      description: Details zu einer einzelnen Adresse ermitteln.
-    put:
-      summary: Adresse überschreiben
-      tags:
-        - Adresse
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Address"
-        "404":
-          description: Not Found
-      operationId: put-address-id
-      description: "Daten eines Adressbucheintrags überschrieben. Bei einer PUT-Anfrage muss hierfür der vollständige Datensatz an den Server geschickt werden, inklusive der Felder, die nicht geändert werden sollen. Die ID kann als einziges Feld nicht geändert werden. Sie wird aus der URL übernommen und im Request Body vom Server ignoriert."
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Address"
-        description: ""
-    patch:
-      summary: Einzelnes Feld ändern
-      tags:
-        - Adresse
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Address"
-        "404":
-          description: Not Found
-      operationId: patch-address-id
-      description: "Einzelne Felder eines Adressbucheintrags überschrieben. Bei einer PATCH-Anfrage müssen hierfür nur die Felder an den Server geschickt werden, die tatsächlich geändert werden sollen. Die ID kann als einziges Feld nicht geändert werden. Sie wird aus der URL übernommen und im Request Body vom Server ignoriert."
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Address"
-    delete:
-      summary: Adresse löschen
-      tags:
-        - Adresse
-      responses:
-        "204":
-          description: No Content
-        "404":
-          description: Not Found
-      operationId: delete-address-id
-      description: Adressbucheintrag löschen
 components:
   schemas:
     Student:
@@ -353,27 +230,24 @@ components:
           type: string
         course:
           type: string
+        direction:
+          type: string
         course_id:
-          type: string
-        logged:
-          type: string
-    Address:
-      title: Address
-      type: object
-      description: "Ein Eintrag im Adressbuch, bestehend aus Vorname, Nachname, Telefonnumer und E-Mailadresse. Die ID wird von der Datenbank generiert und kann nachträglich nicht mehr verändert werden."
-      properties:
-        _links:
-          $ref: "#/components/schemas/HATEOAS_Resource"
-        _id:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-        phone:
           type: string
         email:
           type: string
+        password:
+          type: string
+        logged:
+          type: string
+        reminder:
+          type: string
+      required:
+        - matrikel_nr
+        - first_name
+        - last_name
+        - email
+        - password
     HATEOAS_Collection:
       title: HATEOAS_Collection
       type: object
@@ -412,8 +286,6 @@ components:
           items:
             type: string
 tags:
-  - name: Adresse
-  - name: Adressliste
   - name: Start
   - name: Student
   - name: Studentenliste

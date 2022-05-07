@@ -52,6 +52,8 @@ nav {
 
     border: 0px solid #202020;
     border-bottom-width: 3px;
+
+    display: flex;
 }
 
 nav a,
@@ -64,17 +66,11 @@ nav a:hover {
     padding: 1em;
 }
 
-nav.non-interactive a:hover {
-    cursor: default;
-}
-
 nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
     margin-bottom: -3px;
-
-    display: flex;
 }
 
 nav li.active {

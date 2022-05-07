@@ -44,11 +44,13 @@ class DatabaseFactory {
                     last_name: "Mustermann",
                     birthday: "19.01.2000",
                     fakultaet: "Wirtschaft",
-                    course: "Software Engineering",
+                    course: "Wirtschaftsinformatik",
+                    direction: "Data Science",
                     course_id: "WWI20B4",
                     email: "max.mustermann@dh-karlsruhe.de",
                     password: "ABC123",
-                    logged: "n"
+                    logged: "n",
+                    reminder: "y"
                 },
                 {
                     matrikel_nr: "1000001",
@@ -56,11 +58,41 @@ class DatabaseFactory {
                     last_name: "Musterfrau",
                     birthday: "19.01.1998",
                     fakultaet: "Wirtschaft",
-                    course: "Data Science",
+                    course: "Wirtschaftsinformatik",
+                    direction: "Software Engineering",
                     course_id: "WWI20B2",
                     email: "maike.musterfrau@dh-karlsruhe.de",
                     password: "ABC123",
-                    logged: "n"
+                    logged: "n",
+                    reminder: "y"
+                },
+                {
+                    matrikel_nr: "1000002",
+                    first_name: "Marlon",
+                    last_name: "Mustermann",
+                    birthday: "19.01.2000",
+                    fakultaet: "Wirtschaft",
+                    course: "Wirtschaftsinformatik",
+                    direction: "Software Engineering",
+                    course_id: "WWI20B2",
+                    email: "marlon.musterfrau@dh-karlsruhe.de",
+                    password: "ABC123",
+                    logged: "n",
+                    reminder: "y"
+                },
+                {
+                    matrikel_nr: "1000003",
+                    first_name: "Marie",
+                    last_name: "Musterfrau",
+                    birthday: "19.04.2000",
+                    fakultaet: "Wirtschaft",
+                    course: "Wirtschaftsinformatik",
+                    direction: "Sales & Consulting",
+                    course_id: "WWI20B4",
+                    email: "marie.musterfrau@dh-karlsruhe.de",
+                    password: "ABC123",
+                    logged: "n",
+                    reminder: "y"
                 },
             ]);
         }

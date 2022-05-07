@@ -4,17 +4,13 @@ import restify from "restify";
 import OpenApiEnforcer from "openapi-enforcer";
 import OpenApiEnforcerMiddleware from "@dschulmeis/restify-openapi-enforcer-middleware";
 
-//// TODO: Weitere Controller-Klassen importieren ////
 import DatabaseFactory from "./database.js";
 import RootController from "./controller/root.controller.js";
 import StudentController from "./controller/student.controller.js"
-import UserController from "./controller/user.controller.js";
-import CurrentUserController from "./controller/current_user.controller.js";
 
 // Verzeichnisnamen der Quellcodedatei ermitteln
 import path from "path";
 import { fileURLToPath } from "url";
-import AddressController from "./controller/address.controller.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /* =============================================================================
@@ -97,17 +93,12 @@ server.use(OpenApiEnforcerMiddleware(openApiEnforcer));
 
 
 // HTTP-Controller registrieren
-//// TODO: Weitere Controller-Klassen hinzufügen ////
 new RootController(server, "/");
 new StudentController(server, "/student");
-new UserController(server, "/user");
-new CurrentUserController(server, "/cuser");
-new AddressController(server, "/address");
 
 // Server tatsächlich starten
 // Rückruffunktion
 server.listen(config.port, config.host, function() {
-    //// TODO: Konsolenausgabe anpassen (Name des Services usw.) ////
     console.log();
     console.log("=============");
     console.log("StudentSocial-Server");

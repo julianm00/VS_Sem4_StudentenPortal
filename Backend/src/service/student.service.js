@@ -31,13 +31,15 @@ export default class StudentService {
             matrikel_nr:student.matrikel_nr || "",
             first_name: student.first_name  || "",
             last_name:  student.last_name   || "",
-            birthday:   student.birthday    || "",
-            fakultaet:  student.fakultaet   || "",
-            course:     student.course      || "",
-            course_id:  student.course      || "",
+            birthday:   student.birthday    || "Nicht festgelegt",
+            fakultaet:  student.fakultaet   || "Nicht festgelegt",
+            course:     student.course      || "Nicht festgelegt",
+            direction:  student.direction   || "Nicht festgelegt",
+            course_id:  student.course      || "Nicht festgelegt",
             email:      student.email       || "",
             password:   student.password    || "",
             logged:     student.logged      || "n",
+            reminder:   student.reminder    || "y"
         }
 
         let result = await this._students.insertOne(newStudent);
@@ -70,10 +72,12 @@ export default class StudentService {
         if (student.birthday)       updateDoc.$set.birthday     = student.birthday;
         if (student.fakultaet)      updateDoc.$set.fakultaet    = student.fakultaet;
         if (student.course)         updateDoc.$set.course       = student.course;
+        if (student.direction)      updateDoc.$set.direction    = student.direction;
         if (student.course_id)      updateDoc.$set.course_id    = student.course_id;
         if (student.email)          updateDoc.$set.email        = student.email;
         if (student.password)       updateDoc.$set.password     = student.password;
         if (student.logged)         updateDoc.$set.logged       = student.logged;
+        if (student.reminder)       updateDoc.$set.reminder     = student.reminder;
     
         await this._students.updateOne({_id: new ObjectId(id)}, updateDoc);
         return await this._students.findOne({_id: new ObjectId(id)});
