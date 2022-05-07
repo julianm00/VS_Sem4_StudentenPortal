@@ -35,10 +35,9 @@ export default class PageList extends Page {
         let data_logged = await this._app.backend.fetch("GET", "/student?logged=y");
         // HTML-Inhalt nachladen
         await super.init();
-        await this._updateList();
+        this._updateList();
         this._title = "Übersicht";
 
-        console.log(data_logged);
         if(!data_logged.length) {
             location.hash = "#/login/";
             return;
@@ -85,39 +84,11 @@ export default class PageList extends Page {
             divStudentElement.appendChild(liStudentElement);
         }
 
-        /*let olStudentElement = this._mainElement.querySelector("ol");
-
-        let templateStudentElement = this._mainElement.querySelector(".list-student-entry");
-        let templateStudentHtml = templateStudentElement.outerHTML; 
-        templateStudentElement.remove(); 
-        for(let index in data_student) {
-            let dataset_student = data_student[index];
-            let htmlStudent = templateStudentHtml;
-
-            let first_name  = dataset_student.first_name;
-            let last_name   = dataset_student.last_name;
-            let birthday    = dataset_student.birthday;
-            let course      = dataset_student.course;
-            let course_id   = dataset_student.course_id;
-
-            htmlStudent = htmlStudent.replace("$FIRST_NAME$", first_name);
-            htmlStudent = htmlStudent.replace("$LAST_NAME$", last_name);
-            htmlStudent = htmlStudent.replace("$BIRTHDAY$", birthday);
-            htmlStudent = htmlStudent.replace("$COURSE$", course);
-            htmlStudent = htmlStudent.replace("$COURSE_ID$", course_id);
-
-            if(data_logged.length) {
-                let dummyStudentElement = document.createElement("div");
-                dummyStudentElement.innerHTML = htmlStudent;
-                let liStudentElement = dummyStudentElement.firstElementChild;
-                liStudentElement.remove();
-                olStudentElement.appendChild(liStudentElement);
-            }
-
-        } */
-
         let logout = document.querySelector("#logout-btn");
         logout.addEventListener("click", () => this._logout());
+
+        let filter = this._mainElement.querySelector("#filter");
+        filter.addEventListener("click", () => this.showMenu());
     }
     
     async _updateList() {
@@ -155,5 +126,15 @@ export default class PageList extends Page {
         await this._app.backend.fetch("PUT", stringID, {body: dataset_student});
 
         location.hash = "#/login/";
+    }
+
+    showMenu() {
+        let filterMenu = this._mainElement.querySelector(".selectors");
+        if (filterMenu.classList.contains("hidden")) {
+            filterMenu.classList.remove("hidden");
+        } else {
+            filterMenu.classList.add("hidden");
+        }
+
     }
 };

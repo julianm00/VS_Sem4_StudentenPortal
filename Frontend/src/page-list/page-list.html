@@ -15,6 +15,20 @@
 
     flex-direction: column;
   }
+  .navi {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1em 10%;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .selectors {
+    padding: 1rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+  }
 
   main h1 {
     background-color: white;
@@ -25,12 +39,10 @@
     font-size: 20pt;
   }
 
-  main .actions > div:first-child {
-    margin-left: 0;
-  }
-
-  main .actions > div:last-child {
-    margin-right: 0;
+  main .actions > div {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    padding: 0.75em;
+    border-radius: 1em;
   }
 
   main .actions > div:hover {
@@ -46,7 +58,7 @@
 
   .student-entry {
     background-color: white;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
     border-radius: 30px;
 
     width: 70vw;
@@ -76,6 +88,18 @@
     text-align: center;
   }
 
+  .card-body {
+    text-align: center;
+  }
+
+  #heading {
+    text-align: center;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
   @media (min-width: 576px) {
     .student-entry {
       width: 45vw;
@@ -90,11 +114,27 @@
     .student-entry {
       width: 35vw;
     }
+
+    .actions {
+      display: none;
+    }
+
+    .select {
+      min-width: 25vw;
+    }
+
+    .selectors {
+      display: block !important;
+    }
   }
 
   @media (min-width: 1100px) {
     .student-entry {
-      width: 25vw;
+      width: 20vw;
+    }
+
+    .select {
+      min-width: 15vw;
     }
   }
 </style>
@@ -102,7 +142,48 @@
 <!-- Inhalt der Seite -->
 <main>
   <div class="container d-flex">
-    <h1>Studenten</h1>
+    <div class="select">
+      <div class="navi">
+        <h1 id="heading">Studenten</h1>
+
+        <div class="actions">
+          <div class="action" id="filter">
+            <a><i class="fa-solid fa-filter fa-xl"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="selectors hidden">
+        <label for="fak" class="form-label">Fakultät</label>
+        <select id="fak" class="form-select" aria-label="Default select example">
+          <option selected>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+        <label for="kurs" class="form-label">Studiengang</label>
+        <select id="kurs" class="form-select" aria-label="Default select example">
+          <option selected>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+        <label for="richtung" class="form-label">Studienrichtung</label>
+        <select id="richtung" class="form-select" aria-label="Default select example">
+          <option selected>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+        <label for="nummer" class="form-label">Kursnummer</label>
+        <select id="nummer" class="form-select" aria-label="Default select example">
+          <option selected>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+    </div>
 
     <div class="students d-flex">
       <div class="student-entry bg-white card">
@@ -117,11 +198,11 @@
         </div>
         <hr class="seperator" />
         <div class="card-body data">
-          <div>Studengang:</div>
+          <div><b>Studiengang:</b></div>
           <div>$COURSE$</div>
-          <div>Kursnummer:</div>
+          <div><b>Kursnummer:</b></div>
           <div>$COURSE_ID$</div>
-          <div>Geburtstag:</div>
+          <div><b>Geburtstag:</b></div>
           <div>$BIRTHDAY$</div>
         </div>
       </div>

@@ -80,10 +80,7 @@ export default class Register extends Page {
         // User erhalten
         let getStringStudent = '/student?email=' + emailUser;
         let data_student = await this._app.backend.fetch("GET", getStringStudent);
-        let data_allStudents = await this._app.backend.fetch("GET", "/student");
         this._dataset_student = data_student[0];
-
-        console.log(this.data_student);
 
         if (!this._dataset_student) {
             swal({
