@@ -1,4 +1,4 @@
-SPA/REST-Vorlage: Backend
+Studentenportal StudentSocial: Backend
 =========================
 
 Inhaltsverzeichnis
