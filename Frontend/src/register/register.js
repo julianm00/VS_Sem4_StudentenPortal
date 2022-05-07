@@ -59,11 +59,12 @@ export default class Register extends Page {
         this._inputFirstName        = this._mainElement.querySelector("#firstName");
         this._inputLastName         = this._mainElement.querySelector("#lastName");
 
+        /*
         let saveButton = this._mainElement.querySelector(".btn.auth-btn");
         saveButton.addEventListener("click", () => this._register());
 
         let toLogLink = this._mainElement.querySelector(".toLogin");
-        toLogLink.addEventListener("click", () => this.toLogin());
+        toLogLink.addEventListener("click", () => this.toLogin()); */
     }
 
     async _register() {
@@ -74,16 +75,6 @@ export default class Register extends Page {
         this._dataset_student.email         = this._inputEmail.value.trim();
         let p                               = this._inputPassword.value.trim();
         let pr                              = this._inputPasswordRepeat.value.trim();
-
-        if (p != pr) {
-            alert("Passwords are different!");
-            return;
-        }
-
-        if (p.length < 8) {
-            alert("Passwords is less than 8 characters!");
-            return;
-        }
 
         this._dataset_student.password      = p;
 
@@ -98,7 +89,7 @@ export default class Register extends Page {
     }
 
     async _updateList() {
-        let data_cuser = await this._app.backend.fetch("GET", "/student?logged=y");
+        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -107,7 +98,7 @@ export default class Register extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (!data_cuser.length) {
+        if (!data_student.length) {
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 

@@ -1,6 +1,5 @@
 <!-- Stylesheet der Seite -->
 <style>
-  /* TODO: Stylesheet definieren  */
   .page-content {
     width: 100%;
     min-height: 100vh;
@@ -16,7 +15,6 @@
 
   .logo-area {
     padding: 10px 20%;
-    margin-top: 60px;
   }
 
   .logo {
@@ -98,82 +96,63 @@
     text-decoration: underline;
     cursor: pointer;
   }
+
+  .seperator {
+    margin-top: 5%;
+    margin-bottom: 5%;
+  }
 </style>
 
 <!-- Inhalt der Seite -->
-<main>
-  <!-- TODO: HTML-Gerüst definieren -->
-  <div class="page-content d-flex align-items-center">
-    <div class="container d-flex justify-content-center">
-      <div class="col-10 col-sm-10 col-md-8 col-lg-7 col-xl-6 col-xxl-5">
-        <div class="auth-card">
-          <div class="logo-area">
-            <img
-              class="logo"
-              src="../img/twitter_header_photo_1.png"
-              alt="Logo"
-            />
-          </div>
-          <h5 class="auth-title">Connect together!</h5>
-
-          <hr class="seperator" />
-
-          <form>
-            <div class="mb-3 mt-5">
-              <input
-                type="text"
-                class="form-control auth-input"
-                id="firstName"
-                placeholder="first name"
-              />
-            </div>
-            <div class="mb-3">
-              <input
-                type="text"
-                class="form-control auth-input"
-                id="lastName"
-                placeholder="last name"
-              />
-            </div>
-            <div class="mb-3">
-              <input
-                type="text"
-                class="form-control auth-input"
-                id="matrikelNr"
-                placeholder="student id"
-              />
-            </div>
-            <div class="mb-3">
-              <input
-                type="text"
-                class="form-control auth-input"
-                id="email"
-                placeholder="e-mail adresss"
-              />
-            </div>
-            <div class="mb-3">
-              <input
-                type="password"
-                class="form-control auth-input"
-                id="password"
-                placeholder="password"
-              />
-            </div>
-            <div class="mb-3">
-              <input
-                type="password"
-                class="form-control auth-input"
-                id="passwordRepeat"
-                placeholder="repeat password"
-              />
-            </div>
-            <button class="btn auth-btn mt-2 mb-4">Register</button>
-          </form>
-
-          <p class="text mb-4">
-            Already have an account? <a class="text-link toLogin">Login!</a>
-          </p>
+<main class="page-content d-flex align-items-center">
+  <div class="container d-flex justify-content-center">
+    <div class="col-12 col-sm-11 col-md-10 col-lg-9 col-xl-8 col-xxl-7">
+      <div class="auth-card">
+        <div class="logo-area">
+          <img
+            class="logo"
+            src="data:image/png;base64,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vA+tUOR3XeK5Og5Dq71l1T/+V8uPSyqrYdyhszTj+eN+Da2wRmT4J3I+bjqc2ptl5Xh8rydnMV99Wyv1VTsNWd2qX/LbCbgNy5/u3Y9raTpzSbJARRC6r0r3vJy4SIW8UHs/+fwYcbOwSZPR3X1KQuM0IH9d+Ghxug4/6iB8kONa3kIBMLqvX/eYt9K1ryLX1nl+jLi0l16uey/qriIPXVCRZ0RtwnXrYd1VGal3R/cEdJ+csKDF6+cszGjpvovoXoTcnNa9ECO41F7DjauJnPd2WneptaJ7SroLulSx10WTTtLio/IudUCkad2VrLuKNNciYl8felZNTPc+nDmhexK6q4nZaIEVJM2LWyk7B9Je4K/CHze3IzK0FKSvYBW8Ne0j593N0V2he+K6eyGwDvRVSuPul/bh6G7ucXANdOx8CwzqCC0vtJSlDs+VLmbftppsju7WRrVdtYbuSehuLzjnDaCGFpDcGSo4uhtSHLJAia4r7YzoHtjSXvEvdkfowu24zubpbr7W7SZ/vaP7CueqngKPv7jwImuhjS3cyhWjA9xvQ1ra3Rzdcx1Y2U+Hn8fQB5cMMDerspm6G/eLxin+RPdEdDcu/DHaHKqjv9Hn88u8OmJtt4RK3t8xu0t34zjbLnCEXejghees5VrM36K6m2O1dvkxuqeie5a9trrU7TGwhfp4tWzbwTXp/L+BTT5ea4/B5nVqy6o9dvd/lefxVGnL/LzHqn0PHvwxcNrn3d13HPnHqVXHbQbp6g6A7vBz+M///xD//O97+C/XGNAd0B3dAd3RHdAd3QHd0R3QHd0B3dEd0B3dAd3RHdAd3QHd0R3QHdAd3QHd0R3QHd0B3dEd0B3dAd3RHdAd3QHd0R3QHd0B3dEd0B3QHd0B3dEd0B3dAd3RHdAd3QHd0R3QHd0B3dEd0B3dAd3RHdD933bpWAAAAABgkL/1IPYWQ6A7uuuO7rqju+7orju6647uuqO77uiuO7rrju6gO7rrju66o7vu6K47uuuO7rqju+7orju6647uuqM7uuuO7rqju+7orju6647uuqO77uiuO7rrju66ozu6647uuqO77uiuO7rrju66o7vu6K47uuuO7rqjO7rrju66o7vu6K47uuuO7rqju+7orju6647uuqM76I7uuqO77uiuO7rrju66o7vu6K47uuuO7rqjO+iO7rqju+7orju6647uuqO77uiuO7rrju66o7vu6I7uuqO77uiuO7rrju66o7vu6K47uuuO7rqju+7oju66o7vu6K47uuuO7rqju+7orju6647uuqO77ugOuqO77uiuO7rrju66o7vu6K47uuuO7rqju+7oDrqju+7orju6647uuqO77uiuO7rrju66o7vu6K47uqO77uiuO7rrju66o7vu6K47uuuO7rqju+7orju6o7vu6K47uuuO7rqju+7orju6647uuqO77uiuO7qju+7orju6647uuqO77uiuO7rrju66o7vu6K47uoPu6K47uuuO7rqju+7orju6647uuqO77uiuO7qD7uiuO7rrju66o7vu6K47uuuO7rqju+7orju6647u6K47uuuO7rqju+7orju6647uuqO77uiuO7rrju7orju6647uuqO77uiuO7rrju66o7vu6K47uuuO7uiuO7rrju66AwAAAAAAAAAAAAAAAAAAAAAAwBKWrWFAAUSdlQAAAABJRU5ErkJggg=="
+            alt="Logo"
+          />
         </div>
+        <span>
+          <h5 class="auth-title">Connect together!</h5>
+          <h6 class="auth-title">DHBW Karlsruhe</h6>
+        </span>
+
+        <hr class="seperator" />
+
+        <form class="need-validation row g-4" novalidate>
+          <div class="col-md-4">
+            <label for="firstName" class="form-label">Vorname*</label>
+            <input type="text" class="form-control auth-input" id="firstName" placeholder="Vorname" required />
+          </div>
+          <div class="col-md-4">
+            <label for="lastName" class="form-label">Nachname*</label>
+            <input type="text" class="form-control auth-input" id="lastName" placeholder="Nachname" required />
+          </div>
+          <div class="col-md-4">
+            <label for="matrikelNr" class="form-label">Matrikelnummer*</label>
+            <input type="text" class="form-control auth-input" id="matrikelNr" placeholder="Matrikelnummer" />
+          </div>
+          <div class="col-md-12">
+            <label for="email" class="form-label">Email*</label>
+            <input type="text" class="form-control auth-input" id="email" placeholder="mustermann.max@dh-karlsruhe.de" />
+          </div>
+          <div class="col-md-6">
+            <label for="password" class="form-label">Passwort*</label>
+            <input type="password" class="form-control auth-input" id="password" placeholder="Passwort" />
+          </div>
+          <div class="col-md-6">
+            <label for="password" class="form-label opacity-0">R</label>
+            <input type="password" class="form-control auth-input" id="passwordRepeat" placeholder="Passwort wiederholen" />
+          </div>
+          <div class="col-md-12">
+            <button class="btn auth-btn mb-4" type="submit">Register</button>
+          </div>
+        </form>
+
+        <p class="text mb-4">Already have an account? <a class="text-link toLogin">Login!</a></p>
       </div>
     </div>
   </div>

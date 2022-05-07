@@ -18,8 +18,6 @@ export default class PageList extends Page {
         this._emptyMessageElement = null;
         this._permMessageElement = null;
 
-        this._dataset_student = null;
-
     }
 
     /**
@@ -33,24 +31,26 @@ export default class PageList extends Page {
      * zu beeinflussen.
      */
     async init() {
+        let data_logged = await this._app.backend.fetch("GET", "/student?logged=y");
         // HTML-Inhalt nachladen
         await super.init();
         await this._updateList();
         this._title = "Übersicht";
 
-        let data_logged = await this._app.backend.fetch("GET", "/student?logged=y");
+        console.log(data_logged);
+        if(!data_logged.length) {
+            location.hash = "#/login/";
+            return;
+        }
+
         let data_student = await this._app.backend.fetch("GET", "/student?logged=n");
+        console.log(data_student);
 
         this._emptyMessageElement = this._mainElement.querySelector(".empty-placeholder");
         this._permMessageElement = this._mainElement.querySelector(".perm-placeholder");
 
         if(data_student.length) {
             this._emptyMessageElement.classList.add("hidden");
-        }
-
-        if(!data_logged.length) {
-            location.hash = "#/login/";
-            return;
         }
 
         let olStudentElement = this._mainElement.querySelector("ol");
@@ -90,7 +90,7 @@ export default class PageList extends Page {
     }
     
     async _updateList() {
-        let data_cuser = await this._app.backend.fetch("GET", "/student?logged=y");
+        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -99,7 +99,7 @@ export default class PageList extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (!data_cuser.length) {
+        if (!data_student.length) {
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 
@@ -115,16 +115,14 @@ export default class PageList extends Page {
     }
 
     async _logout() {
-        console.log("Logout");
-
         let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
-        this._dataset_student = data_student[0];
+        let dataset_student = data_student[0];
 
-        let stringID = "/student/" + this._dataset_student._id;
-        this._dataset_student.logged = "n";
+        let stringID = "/student/" + dataset_student._id;
+        dataset_student.logged = "n";
 
-        await this._app.backend.fetch("PUT", stringID, {body: this._dataset_student});
+        await this._app.backend.fetch("PUT", stringID, {body: dataset_student});
 
-        location.hash = "#/";
+        location.hash = "#/login/";
     }
 };

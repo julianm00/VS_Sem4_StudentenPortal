@@ -20,16 +20,7 @@ export default class PageEdit extends Page {
         // Bearbeiteter Datensatz
         this._editId = editId;
 
-        this._dataset = {
-            matrikel_nr: "",
-            first_name: "",
-            last_name: "",
-            birthday: "",
-            course: "",
-            course_id: "",
-            email: "",
-            password: ""
-        }
+        this._dataset;
         
         // Anzeigefelder
         this._firstNameDisplay = null;
@@ -60,7 +51,7 @@ export default class PageEdit extends Page {
         await super.init();
         await this._updateList();
 
-        let returnArray = await this._app.backend.fetch("GET", '/cuser'); 
+        let returnArray = await this._app.backend.fetch("GET", '/student?logged=y'); 
         this._dataset = returnArray[0];
 
         // Platzhalter im HTML-Code ersetzen
@@ -153,7 +144,7 @@ export default class PageEdit extends Page {
     }
 
     async _updateList() {
-        let data_cuser = await this._app.backend.fetch("GET", "/cuser");
+        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -162,7 +153,7 @@ export default class PageEdit extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (!data_cuser.length) {
+        if (!data_student.length) {
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 

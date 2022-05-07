@@ -35,11 +35,10 @@ export default class Register extends Page {
      * zu beeinflussen.
      */
     async init() {
+        await this._updateList();
         // HTML-Inhalt nachladen
         await super.init();
         this._title = "Login";
-
-        this._updateList();
 
         this._inputEmail = this._mainElement.querySelector("#email");
         this._inputPassword = this._mainElement.querySelector("#password");
@@ -59,24 +58,24 @@ export default class Register extends Page {
         // User erhalten
         let getStringUser = '/student?email=' + this._inputEmail.value.trim();
         let data_student = await this._app.backend.fetch("GET", getStringUser);
+
         this._dataset_student = data_student[0];
-            
+    
         let p = this._inputPassword.value.trim();
         if (p != this._dataset_student.password) {
             alert("Wrong password!");
             return;
         }
-
-        let stringID = "/student/" + this._dataset_student._id;
-
+        
         this._dataset_student.logged = "y";
+        let stringID = "/student/" + this._dataset_student._id;
 
         let a = await this._app.backend.fetch("PUT", stringID, {body: this._dataset_student});
         location.hash = "#/";
     }
 
     async _updateList() {
-        let data_cuser = await this._app.backend.fetch("GET", "/student?logged=y");
+        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -85,7 +84,7 @@ export default class Register extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (!data_cuser.length) {
+        if (!data_student.length) {
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 
