@@ -3,7 +3,6 @@
   .page-content {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(45deg, rgba(230, 230, 230, 0.2), white);
   }
 
   .auth-card {
@@ -11,6 +10,9 @@
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     padding: 10px 10%;
+
+    margin-top: 10px;
+    margin-bottom: 100px;
   }
 
   .logo-area {
@@ -101,6 +103,27 @@
     margin-top: 5%;
     margin-bottom: 5%;
   }
+
+  .help-text {
+    font-size: 9pt;
+    margin: 0;
+    font-style: italic;
+  }
+
+  .swal-text {
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      overflow: hidden;
+    }
+
+    .auth-card {
+      margin-top: 10px;
+      margin-bottom: 100px;
+    }
+  }
 </style>
 
 <!-- Inhalt der Seite -->
@@ -148,11 +171,16 @@
             <input type="password" class="form-control auth-input" id="passwordRepeat" placeholder="Passwort wiederholen" />
           </div>
           <div class="col-md-12">
-            <button class="btn auth-btn mb-4" type="submit">Register</button>
+            <button class="btn auth-btn mb-2" type="submit">Registrieren</button>
+            <span>
+              <p class="help-text">* bezeichnet Pflichtfelder</p>
+              <p class="help-text">Matrikelnummer wird von der DHBW vergeben</p>
+              <p class="help-text mb-2">Email-Format: nachname.vorname@dh-karlsruhe.de</p>
+            </span>
           </div>
         </form>
 
-        <p class="text mb-4">Already have an account? <a class="text-link toLogin">Login!</a></p>
+        <p class="text mb-4">Schon registriert? Zum <a class="text-link toLogin">Login!</a></p>
       </div>
     </div>
   </div>

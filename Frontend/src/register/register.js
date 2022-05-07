@@ -2,6 +2,7 @@
 
 import Page from "../page.js";
 import HtmlTemplate from "./register.html";
+import swal from 'sweetalert';
 
 /**
  * Klasse PageList: Stellt die Listenübersicht zur Verfügung
@@ -52,40 +53,142 @@ export default class Register extends Page {
         await this._updateList();
         this._title = "Register";
 
+        this._inputFirstName        = this._mainElement.querySelector("#firstName");
+        this._inputLastName         = this._mainElement.querySelector("#lastName");
         this._inputMatrikelNr       = this._mainElement.querySelector("#matrikelNr");
         this._inputEmail            = this._mainElement.querySelector("#email");
         this._inputPassword         = this._mainElement.querySelector("#password");
-        this._inputPasswordRepeat   = this._mainElement.querySelector("#passwordRepeat");
-        this._inputFirstName        = this._mainElement.querySelector("#firstName");
-        this._inputLastName         = this._mainElement.querySelector("#lastName");
+        this._inputPasswordRepeat   = this._mainElement.querySelector("#passwordRepeat")
 
-        /*
         let saveButton = this._mainElement.querySelector(".btn.auth-btn");
         saveButton.addEventListener("click", () => this._register());
 
         let toLogLink = this._mainElement.querySelector(".toLogin");
-        toLogLink.addEventListener("click", () => this.toLogin()); */
+        toLogLink.addEventListener("click", () => this.toLogin());
     }
 
+    /**
+     * Regestrieren eines Nutzers in der Datenbank
+     * 
+     * Dazu werden zunächst die Inhalte der Felder ausgelesen
+     * Falls diese nicht alle befüllt sind wird eine Warnung ausgeworfen
+     * Falls die Matrikelnummer schon vergeben ist wird ein Fehler geworfen
+     * Falls die Email nicht dem Format nachname.vorname@dh-karlruhe.de entspricht wird ebenfalls ein Fehler geworfen
+     * Falls die Email schon registriert wird wird ebenfalls ein Fehler geworfen.
+     * Falls das Passwort nicht übereinstimmt wird ein Fehler geworfen
+     */
     async _register() {
-        // Student
+
         this._dataset_student.first_name    = this._inputFirstName.value.trim();
         this._dataset_student.last_name     = this._inputLastName.value.trim();
         this._dataset_student.matrikel_nr   = this._inputMatrikelNr.value.trim();
         this._dataset_student.email         = this._inputEmail.value.trim();
         let p                               = this._inputPassword.value.trim();
         let pr                              = this._inputPasswordRepeat.value.trim();
+        
+        // Pflichtfelder überprüfen
+        if (!this._dataset_student.first_name || !this._dataset_student.last_name || !this._dataset_student.matrikel_nr || !this._dataset_student.email || !p || !pr) {
+            swal({
+                title: "Achtung",
+                text: "Bitte befüllen sie die Pflichtfelder!",
+                icon: "warning",
+            });
+            return;
+        };
 
+        // Matrikelnummer 7 Zeichen
+        if (this._dataset_student.matrikel_nr.length != 7) {
+            swal({
+                title: "Achtung",
+                text: "Die eingegebene Matrikelnummer hat ein fehlerhaftes Format",
+                icon: "warning",
+            });
+            return;
+        };
+
+        // Matrikelnummer schon registriert
+        let data_allStudents = await this._app.backend.fetch("GET", "/student");
+        let matrikelNrDoppelt = false;
+        for (let index in data_allStudents) {
+            let student_dataset = data_allStudents[index];
+            if (this._dataset_student.matrikel_nr == student_dataset.matrikel_nr) {
+                matrikelNrDoppelt = true;
+            }
+        };
+        if (matrikelNrDoppelt) {
+            swal({
+                title: "Achtung",
+                text: "Die eingegebene Matrikelnummer ist schon registriert.\nBitte überprüfen sie die Nummer oder wenden Sie sich and die DHBW.",
+                icon: "error",
+            });
+            return;
+        };
+
+        // Email Format
+        this._dataset_student.email = this._dataset_student.email.toLowerCase();
+        let regExp = new RegExp("^[a-zA-Z0-9._%+-]+@dh-karlsruhe\.de$");
+        if (!regExp.test(this._dataset_student.email)) {
+            swal({
+                title: "Achtung",
+                text: "Die eingegebene Email entspricht nicht dem Format.\nAchten Sie darauf, dass sie der erhaltenen Email der DHBW entspricht.\nnachname.vorname@dh-karlsruhe.de",
+                icon: "warning",
+            });
+            return;
+        }
+        
+        // Email vorhanden
+        let emailDoppelt = false;
+        for (let index in data_allStudents) {
+            let student_dataset = data_allStudents[index];
+            if (this._dataset_student.email == student_dataset.email) {
+                emailDoppelt = true;
+            }
+        }
+        if (matrikelNrDoppelt) {
+            swal({
+                title: "Achtung",
+                text: "Die eingegebene Email ist schon registriert.\nBitte überprüfen sie die Email oder wenden Sie sich and die DHBW.",
+                icon: "error",
+            });
+            return;
+        }
+
+        // Passwort stimmt nicht überein
+        if (p != pr) {
+            swal({
+                title: "Achtung",
+                text: "Das eingegebene Passwort stimmt nicht überein!",
+                icon: "warning",
+            });
+            return;
+        }
         this._dataset_student.password      = p;
 
         try {
             await this._app.backend.fetch("POST", '/student', {body: this._dataset_student});
         } catch (ex) {
-            alert(ex);
+            swal({
+                title: "Fehler",
+                text: "Bei der Anfrage mit dem Server gab es Probleme. Wenden sie sich an den Support oder versuchen sie es später noch einmal.",
+                icon: "error",
+            });
+            console.log(ex);
             return;
         }
 
-        location.hash = "#/login/";
+        swal({
+            title: "Registriert!",
+            text: "Du kannst dich jetzt anmelden.",
+            icon: "success",
+            buttons: ["Schließen", "Los gehts!"]
+            })
+            .then((login) => {
+            if (login) {
+                location.hash = "#/login/";
+            } else {
+                return;
+            }
+        });
     }
 
     async _updateList() {
