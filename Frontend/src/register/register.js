@@ -130,7 +130,7 @@ export default class Register extends Page {
         if (!regExp.test(this._dataset_student.email)) {
             swal({
                 title: "Achtung",
-                text: "Die eingegebene Email entspricht nicht dem Format.\nAchten Sie darauf, dass sie der erhaltenen Email der DHBW entspricht.\nnachname.vorname@dh-karlsruhe.de",
+                text: "Die eingegebene E-Mail entspricht nicht dem Format.\nAchten Sie darauf, dass sie der erhaltenen E-Mail der DHBW entspricht.\nnachname.vorname@dh-karlsruhe.de",
                 icon: "warning",
             });
             return;
@@ -144,10 +144,10 @@ export default class Register extends Page {
                 emailDoppelt = true;
             }
         }
-        if (matrikelNrDoppelt) {
+        if (emailDoppelt) {
             swal({
                 title: "Achtung",
-                text: "Die eingegebene Email ist schon registriert.\nBitte überprüfen sie die Email oder wenden Sie sich and die DHBW.",
+                text: "Die eingegebene E-Mail ist schon registriert.\nBitte überprüfen sie die E-Mail oder wenden Sie sich and die DHBW.",
                 icon: "error",
             });
             return;
@@ -169,7 +169,7 @@ export default class Register extends Page {
         } catch (ex) {
             swal({
                 title: "Fehler",
-                text: "Bei der Anfrage mit dem Server gab es Probleme. Wenden sie sich an den Support oder versuchen sie es später noch einmal.",
+                text: "Bei der Anfrage mit dem Server gab es Probleme. Wenden Sie sich an den Support oder versuchen Sie es später noch einmal.",
                 icon: "error",
             });
             console.log(ex);
@@ -186,7 +186,12 @@ export default class Register extends Page {
             if (login) {
                 location.hash = "#/login/";
             } else {
-                return;
+                this._inputFirstName.value = "";
+                this._inputLastName.value = "";
+                this._inputMatrikelNr.value = "";
+                this._inputEmail.value = "";
+                this._inputPassword.value = "";
+                this._inputPasswordRepeat.value = "";
             }
         });
     }

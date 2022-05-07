@@ -2,7 +2,8 @@
 <style>
   .page-content {
     width: 100%;
-    min-height: 100vh;
+    min-height: 80vh;
+    background: transparent;
   }
 
   .auth-card {
@@ -115,13 +116,13 @@
   }
 
   @media (min-width: 768px) {
-    body {
-      overflow: hidden;
-    }
-
     .auth-card {
       margin-top: 10px;
       margin-bottom: 100px;
+    }
+
+    .page-content {
+      min-height: 90vh;
     }
   }
 </style>
@@ -145,21 +146,21 @@
 
         <hr class="seperator" />
 
-        <form class="need-validation row g-4" novalidate>
+        <form class="row g-4" novalidate>
           <div class="col-md-4">
             <label for="firstName" class="form-label">Vorname*</label>
-            <input type="text" class="form-control auth-input" id="firstName" placeholder="Vorname" required />
+            <input type="text" class="form-control auth-input" id="firstName" placeholder="Vorname" />
           </div>
           <div class="col-md-4">
             <label for="lastName" class="form-label">Nachname*</label>
-            <input type="text" class="form-control auth-input" id="lastName" placeholder="Nachname" required />
+            <input type="text" class="form-control auth-input" id="lastName" placeholder="Nachname" />
           </div>
           <div class="col-md-4">
             <label for="matrikelNr" class="form-label">Matrikelnummer*</label>
             <input type="text" class="form-control auth-input" id="matrikelNr" placeholder="Matrikelnummer" />
           </div>
           <div class="col-md-12">
-            <label for="email" class="form-label">Email*</label>
+            <label for="email" class="form-label">E-Mail*</label>
             <input type="text" class="form-control auth-input" id="email" placeholder="mustermann.max@dh-karlsruhe.de" />
           </div>
           <div class="col-md-6">
@@ -175,7 +176,7 @@
             <span>
               <p class="help-text">* bezeichnet Pflichtfelder</p>
               <p class="help-text">Matrikelnummer wird von der DHBW vergeben</p>
-              <p class="help-text mb-2">Email-Format: nachname.vorname@dh-karlsruhe.de</p>
+              <p class="help-text mb-2">E-Mail-Format: nachname.vorname@dh-karlsruhe.de</p>
             </span>
           </div>
         </form>

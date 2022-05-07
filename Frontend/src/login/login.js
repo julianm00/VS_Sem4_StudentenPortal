@@ -2,6 +2,7 @@
 
 import Page from "../page.js";
 import HtmlTemplate from "./login.html";
+import swal from 'sweetalert';
 
 /**
  * Klasse PageList: Stellt die Listenübersicht zur Verfügung
@@ -51,26 +52,79 @@ export default class Register extends Page {
     }
 
     async _login() {
-        if (this._inputEmail.value.trim() == "" || this._inputPassword.value.trim() == "") {
-            alert("Password or Email missing!");
+        // Felder sind leer
+        if (!this._inputEmail.value.trim() || !this._inputPassword.value.trim()) {
+            swal({
+                title: "Achtung",
+                text: "Bitte geben Sie E-Mail und/oder Passwort ein!",
+                icon: "warning",
+            });
             return;
         }
-        // User erhalten
-        let getStringUser = '/student?email=' + this._inputEmail.value.trim();
-        let data_student = await this._app.backend.fetch("GET", getStringUser);
 
+        let emailUser = this._inputEmail.value.trim();
+        emailUser = emailUser.toLowerCase();
+
+        // Email prüfen
+        // Email Format
+        let regExp = new RegExp("^[a-zA-Z0-9._%+-]+@dh-karlsruhe\.de$");
+        if (!regExp.test(emailUser)) {
+            swal({
+                title: "Achtung",
+                text: "Die eingegebene E-Mail entspricht nicht dem Format.\nAchten Sie darauf, dass sie der erhaltenen E-Mail der DHBW entspricht.\nnachname.vorname@dh-karlsruhe.de",
+                icon: "warning",
+            });
+            return;
+        }
+        
+        // User erhalten
+        let getStringStudent = '/student?email=' + emailUser;
+        let data_student = await this._app.backend.fetch("GET", getStringStudent);
+        let data_allStudents = await this._app.backend.fetch("GET", "/student");
         this._dataset_student = data_student[0];
+
+        // Email vorhanden
+        let emailEnthalten = false;
+        for (let index in data_allStudents) {
+            let student_dataset = data_allStudents[index];
+            if (this._dataset_student.email == student_dataset.email) {
+                emailEnthalten = true;
+            }
+        }
+        if (!emailEnthalten) {
+            swal({
+                title: "Achtung",
+                text: "Die eingegebene E-Mail nicht registriert.\nBitte überprüfen sie die E-Mail oder registrieren Sie sich.",
+                icon: "error",
+            });
+            return;
+        }
     
         let p = this._inputPassword.value.trim();
         if (p != this._dataset_student.password) {
-            alert("Wrong password!");
+            swal({
+                title: "Achtung",
+                text: "Bitte prüfen Sie E-Mail oder Passwort.",
+                icon: "warning",
+            });
             return;
         }
         
         this._dataset_student.logged = "y";
         let stringID = "/student/" + this._dataset_student._id;
 
-        let a = await this._app.backend.fetch("PUT", stringID, {body: this._dataset_student});
+        try {
+            await this._app.backend.fetch("PUT", stringID, {body: this._dataset_student});
+        } catch (ex) {
+            swal({
+                title: "Fehler",
+                text: "Bei der Anfrage mit dem Server gab es Probleme. Wenden Sie sich an den Support oder versuchen Sie es später noch einmal.",
+                icon: "error",
+            });
+            console.log(ex);
+            return;
+        }
+
         location.hash = "#/";
     }
 

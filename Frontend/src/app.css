@@ -15,6 +15,7 @@
 html, body {
     padding: 0;
     margin: 0;
+    background: rgb(2, 0, 36) !important;
 }
 
 html {
@@ -30,9 +31,6 @@ html {
 @media (min-width: 40em) {
     html {
         /* http://bg.siteorigin.com/ */
-        background: rgb(2, 0, 36) !important;
-        background: linear-gradient(45deg, rgba(2, 0, 36, 1) 0%, rgba(134, 134, 218, 1) 24%, rgba(73, 119, 205, 1) 67%, rgba(0, 212, 255, 1) 100%) !important;
-
         font-size: 11pt;
     }
 
