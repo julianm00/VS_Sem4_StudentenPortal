@@ -17,8 +17,8 @@ Bei diesem Projekt handel es sich um ein Portal, in dem sich Studenten einer Uni
 Damit erhält man eine Übersicht über alle Studenten. Diese lassen sich über Filter selektieren.
 Ein Beispielnutzer, um sich anzumelden ist dabei:
 
-  *E-Mail: max.mustermann@dh-karlsruhe.de
-  *Passwort: ABC123
+  * E-Mail: max.mustermann@dh-karlsruhe.de
+  * Passwort: ABC123
   
 Funktionsumfang
 ---------------
