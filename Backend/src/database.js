@@ -42,7 +42,7 @@ class DatabaseFactory {
                     matrikel_nr:    "1000000",
                     pronoun:        "them / they",
                     first_name:     "Max",
-                    last_name:      "Mustermann",
+                    last_name:      "Muster",
                     birthday:       "19.01.2000",
                     fakultaet:      "Wirtschaft",
                     course:         "Wirtschaftsinformatik",
