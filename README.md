@@ -15,7 +15,8 @@ Kurzbeschreibung
 
 Bei diesem Projekt handel es sich um ein Portal, in dem sich Studenten einer Uni/Hochschule registrieren können.
 Damit erhält man eine Übersicht über alle Studenten. Diese lassen sich über Filter selektieren.
-Ein Beispielnutzer, um sich anzumelden ist dabei:
+Beim Start der Anwendung ist man mit dem Nutzer Max Muster angemeldet.
+Falls ein Logout durchgeführt wird, sind die Anmeldedaten:
 
   * E-Mail: muster.max@dh-karlsruhe.de
   * Passwort: ABC123
