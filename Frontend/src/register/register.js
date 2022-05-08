@@ -145,6 +145,16 @@ export default class Register extends Page {
             return;
         }
 
+        // Passwort zu kurz
+        if (p.length < 8) {
+            swal({
+                title: "Achtung",
+                text: "Das eingegebene Passwort hat weniger als 8 zeichen",
+                icon: "warning",
+            });
+            return; 
+        }
+
         // Passwort stimmt nicht überein
         if (p != pr) {
             swal({

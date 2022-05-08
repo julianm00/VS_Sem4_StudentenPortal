@@ -6,45 +6,14 @@
     padding: 1em;
   }
 
-  main .form > * {
-    display: block;
-    width: 100%;
-
-    border: 0px solid lightgrey;
-    border-bottom-width: 1px;
-
-    padding: 0.5em 0 0.5em 0;
-    margin-bottom: 1em;
+  .help-text {
+    font-size: 9pt;
+    margin: 0;
+    font-style: italic;
   }
 
-  /* AKTIONSBUTTONS */
-  main .actions {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  main .actions > div {
-    padding: 0.5em;
-    margin: 0.5em;
-
-    background-color: #e0e0e0;
-    transition: background-color 0.5s;
-
-    flex: 1;
-    text-align: center;
-  }
-
-  main .actions > div:first-child {
-    margin-left: 0;
-  }
-
-  main .actions > div:last-child {
-    margin-right: 0;
-  }
-
-  main .actions > div:hover {
-    background-color: #f0f0f0;
-    cursor: pointer;
+  .dis {
+    color: rgb(105, 78, 201);
   }
 </style>
 
@@ -52,147 +21,117 @@
 <main>
   <div>
     <div class="data" id="user">
-      <div class="header">
-        <h2>Meine Daten</h2>
-        <div class="actions">
-          <div class="action" id="edit1">
-            <a>✏️</a>
-          </div>
+      <form class="row g-3">
+        <div class="col-md-10 col-sm-6">
+          <h2>Meine Daten</h2>
         </div>
-      </div>
-      <div class="dataset">
-        <div class="data-row1">
-          <div id="fn">$FN$</div>
-          <div id="ln">$LN$</div>
-          <div id="bd">$BD$</div>
+        <div class="col-md-1 col-sm-6">
+          <button id="edit" class="btn btn-primary" value="edit">Bearbeiten</button>
         </div>
-        <div class="data-row2">
-          <div id="fk">$FAK$</div>
-          <div id="dir">$DIR$</div>
-          <div id="c_id">$C_ID$</div>
+        <hr class="seperator" />
+        <div class="col-md-3 col-sm-6">
+          <label for="pronoun" class="form-label">Pronomen</label>
+          <select id="pronoun" class="form-select input" disabled>
+            <option selected value="-">Nicht festgelegt</option>
+            <option value="he / him">he / him</option>
+            <option value="she / her">she / her</option>
+            <option value="them / they">them / they</option>
+          </select>
         </div>
-      </div>
+        <div class="col-md-3 col-sm-6">
+          <label for="firstName" class="form-label">Vorname*</label>
+          <input type="text" class="form-control input" id="firstName" placeholder="Vorname" value="" disabled />
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <label for="lastName" class="form-label">Nachname*</label>
+          <input type="text" class="form-control input" id="lastName" placeholder="Nachname" disabled />
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <label for="matrikelNr" class="form-label">Matrikelnummer*</label>
+          <input type="text" class="form-control" id="matrikelNr" placeholder="Matrikelnummer" disabled />
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <label for="fak" class="form-label">Fakultät</label>
+          <select id="fak" class="form-select input" disabled>
+            <option selected value="-">Nicht festgelegt</option>
+            <option value="Gesundheit">Gesundheit</option>
+            <option value="Wirtschaft">Wirtschaft</option>
+            <option value="Technik">Technik</option>
+          </select>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <label for="kurs" class="form-label">Studiengang</label>
+          <select id="kurs" class="form-select input" disabled class="form-control">
+            <option selected value="-">Nicht festgelegt</option>
+            <option class="dis" value="" disabled><b>Gesundheit</b></option>
+            <option value="Angewandte Gesundheits- und Pflegewissenschaften">Angewandte Gesundheits- und Pflegewissenschaften</option>
+            <option value="Angewandte Hebammenwissenschaft">Angewandte Hebammenwissenschaft</option>
+            <option value="Physician Assistant - Arztassistent">Physician Assistant - Arztassistent</option>
+            <option class="dis" value="" disabled><b>Technik</b></option>
+            <option value="Informatik">Informatik</option>
+            <option value="Elektrotechnik">Elektrotechnik</option>
+            <option value="Maschinenbau">Maschinenbau</option>
+            <option value="Papiertechnik">Papiertechnik</option>
+            <option value="Sicherheitswesen">Sicherheitswesen</option>
+            <option value="Sustainable Science and Technology">Sustainable Science and Technology</option>
+            <option value="Wirtschaftsingenieurwesen">Wirtschaftsingenieurwesen</option>
+            <option class="dis" value="" disabled><b>Wirtschaft</b></option>
+            <option value="BWL">BWL</option>
+            <option value="RSW - Steuern u. Prüfungswesen">RSW - Steuern u. Prüfungswesen</option>
+            <option value="Unternehmertum">Unternehmertum</option>
+            <option value="Wirtschaftsinformatik">Wirtschaftsinformatik</option>
+          </select>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <label for="dir" class="form-label">Studienrichtung</label>
+          <input type="text" class="form-control input" id="dir" placeholder="Studienrichtung" disabled />
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <label for="num" class="form-label">Studienrichtung</label>
+          <input type="text" class="form-control input" id="num" placeholder="Kursnummer" disabled />
+        </div>
+        <div class="col-md-12">
+          <label for="about" class="form-label">About Me**</label>
+          <input type="text" class="form-control input" id="about" placeholder="Schreib etwas um andere Studierende aufmerksam zu machen ..." disabled />
+        </div>
+        <div class="col-md-12">
+          <span>
+            <p class="help-text">* bezeichnet Pflichtfelder</p>
+            <p class="help-text">** max. 25 Zeichen</p>
+          </span>
+        </div>
+      </form>
     </div>
 
-    <div class="data hidden" id="user-edit">
-      <div class="header">
-        <h2>Daten ändern</h2>
-      </div>
-      <div class="dataset">
-        <div class="data-row1">
-            <input id="fn_in" placeholder="Vorname" value="$FN$" />
-            <input id="ln_in" placeholder="Nachname" value="$LN$" />
-            <input id="bd_in" placeholder="Geburtstag" value="$BD$" type="date"/>
+    <div class="data mt-5" id="security">
+      <form class="row g-3">
+        <div class="col-md-12">
+          <h2>Security</h2>
         </div>
-        <div class="data-row2">
-            <input id="fak_in" placeholder="Fakultät" value="$FAK$" />
-            <input id="dir_in" placeholder="Studienrichtung" value="DIR$" />
-            <input id="c_id_in" placeholder="Kursnummer" value="$C_ID$" />
+        <hr class="seperator" />
+        <div class="col-md-4 col-sm-6">
+          <label for="email" class="form-label">E-Mail***</label>
+          <input type="text" class="form-control" id="email" placeholder="E-Mail" disabled />
         </div>
-      </div>
-      <div class="actions">
-        <div class="action" id="save1">
-            <a>💾</a>
+        <div class="col-md-4 col-sm-6">
+          <label for="p" class="form-label">Passwort**</label>
+          <input type="text" class="form-control input" id="p" placeholder="Passwort" value="" disabled />
         </div>
-      </div>
-    </div>
-
-    <div class="data" id="security">
-      <div class="header">
-        <h2>Logindaten</h2>
-        <div class="actions">
-          <div class="action" id="edit2">
-            <a>✏️</a>
-          </div>
+        <div class="col-md-4 col-sm-6">
+          <label for="pr" class="form-label">Passwort wiederholen**</label>
+          <input type="text" class="form-control input" id="pr" placeholder="Passwort wiederholen" disabled />
         </div>
-      </div>
-      <div class="dataset">
-        <div class="data-row1">
-          <div id="email">$EMAIL$</div> 
+        <div class="col-md-12">
+          <span>
+            <p class="help-text">* bezeichnet Pflichtfelder</p>
+            <p class="help-text">** Passwort muss mindestens 8 Zeichen enthalten</p>
+            <p class="help-text">*** für eine E-Mail Änderung wenden Sie sich bitte an den Support</p>
+          </span>
         </div>
-      </div>
-    </div>
-    
-    <div class="data hidden" id="security-edit">
-      <div class="header">
-        <h2>Daten Ändern</h2>
-      </div>
-      <div class="dataset form">
-        <div class="data-row1">
-            <input type="email" id="email_in">
-            <input type="password" id="pw_in" placeholder="Password"></input>
-            <input type="password" id="pwr_in" placeholder="Repeat password"></input>
+        <div class="col-md-2 col-sm-6">
+          <button id="del" class="btn btn-danger" value="del">Account löschen</button>
         </div>
-      </div>
-      <div class="actions">
-        <div class="action" id="save2">
-            <a>💾</a>
-        </div>
-      </div>
-  </div>
-
-  <form class="row g-3 needs-validation" novalidate>
-  <div class="col-md-4">
-    <label for="validationCustom01" class="form-label">First name</label>
-    <input type="text" class="form-control" id="validationCustom01" value="Mark" required>
-    <div class="valid-feedback">
-      Looks good!
+      </form>
     </div>
   </div>
-  <div class="col-md-4">
-    <label for="validationCustom02" class="form-label">Last name</label>
-    <input type="text" class="form-control" id="validationCustom02" value="Otto" required>
-    <div class="valid-feedback">
-      Looks good!
-    </div>
-  </div>
-  <div class="col-md-4">
-    <label for="validationCustomUsername" class="form-label">Username</label>
-    <div class="input-group has-validation">
-      <span class="input-group-text" id="inputGroupPrepend">@</span>
-      <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
-      <div class="invalid-feedback">
-        Please choose a username.
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <label for="validationCustom03" class="form-label">City</label>
-    <input type="text" class="form-control" id="validationCustom03" required>
-    <div class="invalid-feedback">
-      Please provide a valid city.
-    </div>
-  </div>
-  <div class="col-md-3">
-    <label for="validationCustom04" class="form-label">State</label>
-    <select class="form-select" id="validationCustom04" required>
-      <option selected disabled value="">Choose...</option>
-      <option>...</option>
-    </select>
-    <div class="invalid-feedback">
-      Please select a valid state.
-    </div>
-  </div>
-  <div class="col-md-3">
-    <label for="validationCustom05" class="form-label">Zip</label>
-    <input type="text" class="form-control" id="validationCustom05" required>
-    <div class="invalid-feedback">
-      Please provide a valid zip.
-    </div>
-  </div>
-  <div class="col-12">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-      <label class="form-check-label" for="invalidCheck">
-        Agree to terms and conditions
-      </label>
-      <div class="invalid-feedback">
-        You must agree before submitting.
-      </div>
-    </div>
-  </div>
-  <div class="col-12">
-    <button class="btn btn-primary" type="submit">Submit form</button>
-  </div>
-</form>
 </main>
