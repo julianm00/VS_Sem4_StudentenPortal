@@ -187,7 +187,17 @@ export default class Register extends Page {
             })
             .then((login) => {
             if (login) {
-                location.hash = "#/login/";
+                try {
+                    location.hash = "#/login/";
+                } catch {
+                    swal({
+                        title: "Fehler",
+                        text: "Beim Laden der Startseite gab es einen Fehler. Bitte veruschen sie es erneut",
+                        icon: "error",
+                    });
+                    console.log(ex);
+                    return;
+                }
             } else {
                 this._inputFirstName.value = "";
                 this._inputLastName.value = "";
