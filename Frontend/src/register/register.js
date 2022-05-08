@@ -3,6 +3,7 @@
 import Page from "../page.js";
 import HtmlTemplate from "./register.html";
 import swal from 'sweetalert';
+import { _updateList } from "../utils.js";
 
 /**
  * Klasse PageList: Stellt die Listenübersicht zur Verfügung
@@ -40,7 +41,7 @@ export default class Register extends Page {
     async init() {
         // HTML-Inhalt nachladen
         await super.init();
-        this._updateList();
+        await _updateList(this._app);
         this._title = "Register";
 
         // Inputfelder bekommen
@@ -196,43 +197,6 @@ export default class Register extends Page {
                 this._inputPasswordRepeat.value = "";
             }
         });
-    }
-
-    /**
-     * Methode um die Listeneinträge (je nach eingeloggtem User) hinzuzufügen
-     */
-    async _updateList() {
-        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
-        console.log("UPDATING NAVIGATION BAR - REGISTER");
-
-        document.querySelector("#lin1").classList.add("hidden");
-        document.querySelector("#lin2").classList.add("hidden");
-        document.querySelector("#lin3").classList.add("hidden");
-
-        document.querySelector("#lout1").classList.add("hidden");
-        document.querySelector("#lout2").classList.add("hidden");
-
-        if (_dataLoggedStudent.length == 0) {
-            console.log("IF USER LOGGED OUT")
-            console.log("==================");
-            document.querySelector("#lout1").classList.remove("hidden");
-            document.querySelector("#lout2").classList.remove("hidden");
-
-            document.querySelector("#lin1").classList.add("hidden");
-            document.querySelector("#lin2").classList.add("hidden");
-            document.querySelector("#lin3").classList.add("hidden");
-            return;
-        } else {
-            console.log("IF USER LOGGED IN")
-            console.log("=================");
-            document.querySelector("#lin1").classList.remove("hidden");
-            document.querySelector("#lin2").classList.remove("hidden");
-            document.querySelector("#lin3").classList.remove("hidden");
-
-            document.querySelector("#lout1").classList.add("hidden");
-            document.querySelector("#lout2").classList.add("hidden");
-        }
-
     }
 
     /**

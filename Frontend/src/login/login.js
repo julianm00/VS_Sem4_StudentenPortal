@@ -3,6 +3,7 @@
 import Page from "../page.js";
 import HtmlTemplate from "./login.html";
 import swal from 'sweetalert';
+import { _updateList } from "../utils.js";
 
 /**
  * Klasse PageList: Stellt die Listenübersicht zur Verfügung
@@ -30,13 +31,12 @@ export default class Register extends Page {
 
     /**
      * HTML-Inhalt und anzuzeigende Daten laden.
-     *
      */
     async init() {
         // HTML-Inhalt nachladen
         await super.init();
         this._title = "Login";
-        await this._updateList();
+        await _updateList(this._app);
 
         // Inputfelder bekommen
         this._inputEmail = this._mainElement.querySelector("#email");
@@ -117,43 +117,17 @@ export default class Register extends Page {
             console.log(ex);
             return;
         }
-
-        location.hash = "#/";
-    }
-
-    /**
-     * Methode um die Listeneinträge (je nach eingeloggtem User) hinzuzufügen
-     */
-    async _updateList() {
-        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
-        console.log("UPDATING NAVIGATION BAR - LOGIN");
-
-        document.querySelector("#lin1").classList.add("hidden");
-        document.querySelector("#lin2").classList.add("hidden");
-        document.querySelector("#lin3").classList.add("hidden");
-
-        document.querySelector("#lout1").classList.add("hidden");
-        document.querySelector("#lout2").classList.add("hidden");
-
-        if (_dataLoggedStudent.length == 0) {
-            console.log("IF USER LOGGED OUT")
-            console.log("==================");
-            document.querySelector("#lout1").classList.remove("hidden");
-            document.querySelector("#lout2").classList.remove("hidden");
-
-            document.querySelector("#lin1").classList.add("hidden");
-            document.querySelector("#lin2").classList.add("hidden");
-            document.querySelector("#lin3").classList.add("hidden");
+        
+        try {
+            location.hash = "#/";
+        } catch {
+            swal({
+                title: "Fehler",
+                text: "Beim Laden der Startseite gab es einen Fehler. Bitte veruschen sie es erneut",
+                icon: "error",
+            });
+            console.log(ex);
             return;
-        } else {
-            console.log("IF USER LOGGED IN")
-            console.log("=================");
-            document.querySelector("#lin1").classList.remove("hidden");
-            document.querySelector("#lin2").classList.remove("hidden");
-            document.querySelector("#lin3").classList.remove("hidden");
-
-            document.querySelector("#lout1").classList.add("hidden");
-            document.querySelector("#lout2").classList.add("hidden");
         }
 
     }

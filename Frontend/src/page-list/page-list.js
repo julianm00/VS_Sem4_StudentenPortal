@@ -3,6 +3,7 @@
 import swal from "sweetalert";
 import Page from "../page.js";
 import HtmlTemplate from "./page-list.html";
+import { _updateList, checkForLogin, _logout } from "../utils.js";
 
 /**
  * Klasse PageList: Stellt die Listenübersicht zur Verfügung
@@ -35,73 +36,77 @@ export default class PageList extends Page {
         // HTML-Inhalt nachladen
         await super.init();
         this._title = "Übersicht";
-        await this._updateList();
+        await _updateList(this._app);
 
         let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
         let _datasetLoggedStudent = _dataLoggedStudent[0];
-
-        // Tempplate speichern
-        this._templateStudentDiv = this._mainElement.querySelector(".student-entry");
+        let boolean = checkForLogin(_datasetLoggedStudent);
         
-        // Studenten anzeigen
-        let data_student = await this._showStudents("");
+        if (boolean) {
+            // Tempplate speichern
+            this._templateStudentDiv = this._mainElement.querySelector(".student-entry");
+            
+            // Studenten anzeigen
+            let data_student = await this._showStudents("");
 
-        // Dropdownmenu bekommen
-        this.updateSelector(data_student, "#kurs", "course");
-        this.updateSelector(data_student, "#fak", "fakultaet");
-        this.updateSelector(data_student, "#richtung", "direction");
-        this.updateSelector(data_student, "#nummer", "course_id");
+            // Dropdownmenu bekommen
+            this.updateSelector(data_student, "#kurs", "course");
+            this.updateSelector(data_student, "#fak", "fakultaet");
+            this.updateSelector(data_student, "#richtung", "direction");
+            this.updateSelector(data_student, "#nummer", "course_id");
 
-        // Actionlistener registrieren
-        let logout = document.querySelector("#logout-btn");
-        logout.addEventListener("click", () => this._logout());
+            // Actionlistener registrieren
+            let logout = document.querySelector("#logout-btn");
+            logout.addEventListener("click", async () => await _logout(this._app));
 
-        let filter = this._mainElement.querySelector("#filter");
-        filter.addEventListener("click", () => this.showMenu());
+            let filter = this._mainElement.querySelector("#filter");
+            filter.addEventListener("click", () => this.showMenu());
 
-        this._fakSel = this._mainElement.querySelector("#fak");
-        this._fakSel.addEventListener("change", () => this._updateStudentsFak());
-        
-        this._kursSel = this._mainElement.querySelector("#kurs");
-        this._kursSel.addEventListener("change", () => this._updateStudentsKurs());
+            this._fakSel = this._mainElement.querySelector("#fak");
+            this._fakSel.addEventListener("change", () => this._updateStudentsFak());
+            
+            this._kursSel = this._mainElement.querySelector("#kurs");
+            this._kursSel.addEventListener("change", () => this._updateStudentsKurs());
 
-        this._dirSel = this._mainElement.querySelector("#richtung");
-        this._dirSel.addEventListener("change", () => this._updateStudentsDir());
+            this._dirSel = this._mainElement.querySelector("#richtung");
+            this._dirSel.addEventListener("change", () => this._updateStudentsDir());
 
-        this._numSel = this._mainElement.querySelector("#nummer");
-        this._numSel.addEventListener("change", () => this._updateStudentsNum());
+            this._numSel = this._mainElement.querySelector("#nummer");
+            this._numSel.addEventListener("change", () => this._updateStudentsNum());
 
-        // Alert falls Reminder aktiv ist (Noch nie auf Edit Seite gewesen)
-        if (_datasetLoggedStudent) {
-            if(_datasetLoggedStudent.reminder == "y") {
-                swal({
-                    title: "Reminder",
-                    text: "Sie haben noch nich alle Ihre Daten festgelegt!\nFüllen Sie die Daten bitte, sodass ihre Komolitonen Sie finden können.",
-                    icon: "info",
-                    buttons: {
-                        cancel: "Schließen",
-                        rem: "Nicht mehr erinnern",
-                        go: "Los gehts!"
-                    }
-                })
-                .then((async value =>  {    
-                    switch(value) {
-                        case "cancel":
-                            break;
-                        case "rem":
-                            let stringID = "/student/" + _datasetLoggedStudent._id;
-                            _datasetLoggedStudent.reminder = "n";
-                            await this._app.backend.fetch("PUT", stringID, {body: _datasetLoggedStudent});
-                            break;
-                        case "go":
-                            location.hash = "#/edit/";
-                        return;
-                    }
+            // Alert falls Reminder aktiv ist (Noch nie auf Edit Seite gewesen)
+            if (_datasetLoggedStudent) {
+                if(_datasetLoggedStudent.reminder == "y") {
+                    swal({
+                        title: "Reminder",
+                        text: "Sie haben noch nich alle Ihre Daten festgelegt!\nFüllen Sie die Daten bitte, sodass ihre Komolitonen Sie finden können.",
+                        icon: "info",
+                        buttons: {
+                            cancel: "Schließen",
+                            rem: "Nicht mehr erinnern",
+                            go: "Los gehts!"
+                        }
+                    })
+                    .then((async value =>  {    
+                        switch(value) {
+                            case "cancel":
+                                break;
+                            case "rem":
+                                let stringID = "/student/" + _datasetLoggedStudent._id;
+                                _datasetLoggedStudent.reminder = "n";
+                                await this._app.backend.fetch("PUT", stringID, {body: _datasetLoggedStudent});
+                                break;
+                            case "go":
+                                location.hash = "#/edit/";
+                            return;
+                        }
 
-            }));
+                }));
+                }
             }
+            console.log("==================");
         }
-        console.log("==================");
+
     }
 
     /**
@@ -242,70 +247,6 @@ export default class PageList extends Page {
 
         console.log("==================");
         return data_student;
-    }
-
-    /**
-     * Methode um die Listeneinträge (je nach eingeloggtem User) hinzuzufügen
-     */
-    async _updateList() {
-        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
-        console.log("UPDATING NAVIGATION BAR - LIST");
-
-        document.querySelector("#lin1").classList.add("hidden");
-        document.querySelector("#lin2").classList.add("hidden");
-        document.querySelector("#lin3").classList.add("hidden");
-
-        document.querySelector("#lout1").classList.add("hidden");
-        document.querySelector("#lout2").classList.add("hidden");
-
-        if (_dataLoggedStudent.length == 0) {
-            console.log("IF USER LOGGED OUT")
-            console.log("==================");
-            document.querySelector("#lout1").classList.remove("hidden");
-            document.querySelector("#lout2").classList.remove("hidden");
-
-            document.querySelector("#lin1").classList.add("hidden");
-            document.querySelector("#lin2").classList.add("hidden");
-            document.querySelector("#lin3").classList.add("hidden");
-            return;
-        } else {
-            console.log("IF USER LOGGED IN")
-            console.log("=================");
-            document.querySelector("#lin1").classList.remove("hidden");
-            document.querySelector("#lin2").classList.remove("hidden");
-            document.querySelector("#lin3").classList.remove("hidden");
-
-            document.querySelector("#lout1").classList.add("hidden");
-            document.querySelector("#lout2").classList.add("hidden");
-        }
-
-    }
-
-    /**
-     * Logout Button Funktion
-     * Überschreiben des "Logged" Feldes des eingeloggten Studenten mit "n" (no)
-     */
-    async _logout() {
-        console.log("LOGGING OUT")
-        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
-        let _datasetLoggedStudent = _dataLoggedStudent[0];
-
-        let stringID = "/student/" + _datasetLoggedStudent._id;
-        _datasetLoggedStudent.logged = "n";
-
-        try {
-            await this._app.backend.fetch("PUT", stringID, {body: _datasetLoggedStudent});
-        } catch (ex) {
-            swal({
-                title: "Fehler",
-                text: "Bei der Anfrage mit dem Server gab es Probleme. Wenden Sie sich an den Support oder versuchen Sie es später noch einmal.",
-                icon: "error",
-            });
-            console.log(ex);
-            return;
-        }
-        console.log("=================");
-        location.hash = "#/login/";
     }
 
     /**

@@ -3,6 +3,7 @@
 import swal from "sweetalert";
 import Page from "../page.js";
 import HtmlTemplate from "./page-edit.html";
+import { _updateList, checkForLogin, _logout } from "../utils.js";
 
 /**
  * Klasse PageEdit: Stellt die Seite zum Anlegen oder Bearbeiten einer Adresse
@@ -36,7 +37,7 @@ export default class PageEdit extends Page {
 
         // Button
         this._editButton = null;
-        this._editButton2 = null;
+        this._delButton = null;
     }
 
     /**
@@ -46,23 +47,28 @@ export default class PageEdit extends Page {
     async init() {
         // HTML-Inhalt nachladen
         await super.init();
-        await this._updateList();
+        await _updateList(this._app);
         this._title = "Bearbeiten";
 
         let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
         this._datasetLoggedStudent = _dataLoggedStudent[0];
 
-        this._updateID = this._datasetLoggedStudent._id;
+        let boolean = checkForLogin(this._datasetLoggedStudent);
 
-        if(!_dataLoggedStudent) {
-            location.hash = "#/login/";
-            return;
+        if (boolean){
+            this._updateID = this._datasetLoggedStudent._id;
+
+            this.updateFormInputs();
+            
+            let logout = document.querySelector("#logout-btn");
+            logout.addEventListener("click", async () => await _logout(this._app));
+
+            this._delButton = this._mainElement.querySelector("#del");
+            this._delButton.addEventListener("click", async () => await this._delete())
+
+            this._editButton = this._mainElement.querySelector("#edit");
+            this._editButton.addEventListener("click", () => this._enableEditAndSave(this._datasetLoggedStudent));
         }
-
-        this.updateFormInputs();
-
-        this._editButton = this._mainElement.querySelector("#edit");
-        this._editButton.addEventListener("click", () => this._enableEditAndSave(this._datasetLoggedStudent));
     }
 
     async _enableEditAndSave() {
@@ -174,40 +180,33 @@ export default class PageEdit extends Page {
     }
 
     /**
-     * Methode um die Listeneinträge (je nach eingeloggtem User) hinzuzufügen
+     * Methode zum Löschen des Nutzers anhand der ID
      */
-    async _updateList() {
-        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
-        console.log("UPDATING NAVIGATION BAR - EDIT");
+    async _delete() {
+        swal({
+            title: "Hinweis",
+            text: "Account löschen?",
+            icon: "error",
+            buttons: ["Schließen", "Ja"]
+        })
+        .then(async (yes) => {
+            if (yes) {
+            console.log("DELETING USER");
 
-        document.querySelector("#lin1").classList.add("hidden");
-        document.querySelector("#lin2").classList.add("hidden");
-        document.querySelector("#lin3").classList.add("hidden");
+            let stringID = "/student/" + this._updateID;
 
-        document.querySelector("#lout1").classList.add("hidden");
-        document.querySelector("#lout2").classList.add("hidden");
+            try {
+                await this._app.backend.fetch("DELETE", stringID);
+            } catch (ex) {
+                console.log("Fehler wegen leerem JSOn (Gateway Problem");
+            }
 
-        if (_dataLoggedStudent.length == 0) {
-            console.log("IF USER LOGGED OUT")
-            console.log("==================");
-            document.querySelector("#lout1").classList.remove("hidden");
-            document.querySelector("#lout2").classList.remove("hidden");
-
-            document.querySelector("#lin1").classList.add("hidden");
-            document.querySelector("#lin2").classList.add("hidden");
-            document.querySelector("#lin3").classList.add("hidden");
-            return;
-        } else {
-            console.log("IF USER LOGGED IN")
             console.log("=================");
-            document.querySelector("#lin1").classList.remove("hidden");
-            document.querySelector("#lin2").classList.remove("hidden");
-            document.querySelector("#lin3").classList.remove("hidden");
-
-            document.querySelector("#lout1").classList.add("hidden");
-            document.querySelector("#lout2").classList.add("hidden");
-        }
-
+            location.hash = "#/login/";
+            } else {
+                return;
+            };
+        });
     }
 
     /**
