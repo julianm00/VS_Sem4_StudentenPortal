@@ -6,7 +6,7 @@ Inhaltsverzeichnis
 
  1. [Kurzbeschreibung](#kurzbeschreibung)
  2. [Funktionsumfang](#funktionsumfang)
- 3. [Hinweis](#hinweis)
+ 3. [Wichtige Hinweise](#wichtige-hinweise)
  4. [Author](#author)
  5. [Start mit Docker Compose](#start-mit-docker-compose)
  
@@ -27,12 +27,14 @@ In dieser Webanwendung kann man sich als Student einloggen und registrieren. Ebe
 die über Filter angepasst werden kann. In seinem Profil können dann die Angaben zum Studiengang zunächst initialisiert werden (beim erstmaligen Registrieren)
 sowie angepasst werden. Durcheinen Logout kommt man wieder zum Login der Anwendung.
 
-Hinweis
+Wichtige Hinweise
 -------
 
 In der Datenbank wird das Passwort unverschlüsselt gespeichert. Ebenso sind die Abfragen nicht mit Token verifziert.
 Diese Anwendung dient als Beispiel und sollte nie produkiv genommen werden.
 Ebenso ist nach aktuellem Stand nur ein Nutzer einloggbar. Die Webwanwendung funktioniert somit nur mit einem aktuell eingeloggtem Nutzer (oder als würde die Anwendung nur an einem Rechner laufen).
+
+Es kann vorkommen, das beim ersten Login, nicht eingeloggt wird. Falls dies ser Fall sein sollte versuchen Sie es erneut.
 
 Author
 ------
