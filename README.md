@@ -17,7 +17,7 @@ Bei diesem Projekt handel es sich um ein Portal, in dem sich Studenten einer Uni
 Damit erhält man eine Übersicht über alle Studenten. Diese lassen sich über Filter selektieren.
 Ein Beispielnutzer, um sich anzumelden ist dabei:
 
-  * E-Mail: max.mustermann@dh-karlsruhe.de
+  * E-Mail: muster.max@dh-karlsruhe.de
   * Passwort: ABC123
   
 Funktionsumfang
@@ -32,6 +32,7 @@ Hinweis
 
 In der Datenbank wird das Passwort unverschlüsselt gespeichert. Ebenso sind die Abfragen nicht mit Token verifziert.
 Diese Anwendung dient als Beispiel und sollte nie produkiv genommen werden.
+Ebenso ist nach aktuellem Stand nur ein Nutzer einloggbar. Die Webwanwendung funktioniert somit nur mit einem aktuell eingeloggtem Nutzer (oder als würde die Anwendung nur an einem Rechner laufen).
 
 Author
 ------
