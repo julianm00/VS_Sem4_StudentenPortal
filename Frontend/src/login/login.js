@@ -80,7 +80,7 @@ export default class Register extends Page {
         }
         
         // User erhalten
-        let getStringStudent = '/student?email=' + emailUser;
+        let getStringStudent = '/student?email=' + encodeURIComponent(emailUser);
         let data_student = await this._app.backend.fetch("GET", getStringStudent);
         this._dataset_student = data_student[0];
 

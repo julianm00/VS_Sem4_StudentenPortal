@@ -217,7 +217,7 @@ export default class PageList extends Page {
             let dataset_student = data_student[index];
             let htmlStudent = templateStudentDivHtml;
 
-            let pronoun     = dataset_student.pronoun;
+            let pronoun     = "(" + dataset_student.pronoun + ")";
             let first_name  = dataset_student.first_name;
             let last_name   = dataset_student.last_name;
             let birthday    = dataset_student.birthday;
