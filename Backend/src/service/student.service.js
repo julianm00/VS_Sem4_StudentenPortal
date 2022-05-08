@@ -29,17 +29,19 @@ export default class StudentService {
 
         let newStudent = {
             matrikel_nr:student.matrikel_nr || "",
+            pronoun:    student.pronoun     || "-",
             first_name: student.first_name  || "",
             last_name:  student.last_name   || "",
-            birthday:   student.birthday    || "Nicht festgelegt",
-            fakultaet:  student.fakultaet   || "Nicht festgelegt",
-            course:     student.course      || "Nicht festgelegt",
-            direction:  student.direction   || "Nicht festgelegt",
-            course_id:  student.course      || "Nicht festgelegt",
+            birthday:   student.birthday    || "-",
+            fakultaet:  student.fakultaet   || "-",
+            course:     student.course      || "-",
+            direction:  student.direction   || "-",
+            course_id:  student.course      || "-",
             email:      student.email       || "",
             password:   student.password    || "",
             logged:     student.logged      || "n",
-            reminder:   student.reminder    || "y"
+            reminder:   student.reminder    || "y",
+            abooutme:   student.aboout      || ""
         }
 
         let result = await this._students.insertOne(newStudent);
@@ -54,7 +56,7 @@ export default class StudentService {
     }
 
     /**
-     * Student updaten
+     * Einzelnen Student updaten
      */
     async update(id, student) {
         let oldStudent = await this._students.findOne({_id : new ObjectId(id)});
@@ -67,6 +69,7 @@ export default class StudentService {
         };
 
         if (student.matrikel_nr)    updateDoc.$set.matrikel_nr  = student.matrikel_nr;
+        if (student.pronoun)        updateDoc.$set.pronoun      = student.pronoun;
         if (student.first_name)     updateDoc.$set.first_name   = student.first_name;
         if (student.last_name)      updateDoc.$set.last_name    = student.last_name;
         if (student.birthday)       updateDoc.$set.birthday     = student.birthday;
@@ -76,6 +79,7 @@ export default class StudentService {
         if (student.course_id)      updateDoc.$set.course_id    = student.course_id;
         if (student.email)          updateDoc.$set.email        = student.email;
         if (student.password)       updateDoc.$set.password     = student.password;
+        if (student.aboout)         updateDoc.$set.aboout       = student.aboout;
         if (student.logged)         updateDoc.$set.logged       = student.logged;
         if (student.reminder)       updateDoc.$set.reminder     = student.reminder;
     
@@ -84,7 +88,7 @@ export default class StudentService {
     }
 
     /**
-     * Student löschen
+     * Einzelnen Student löschen
      */
     async delete(id) {
         let result = await this._students.deleteOne({_id: new ObjectId(id)});

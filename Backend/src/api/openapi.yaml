@@ -46,7 +46,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Student"
       operationId: get-student
-      description: Studenten suchen. Für die Suche können über die URL verschiedene Suchparameter angegeben werden. Die Antwort wird immer in einer Liste mit den gefundenen Studenten geliefert
+      description: Eine Liste an Studenten suchen. Für die Suche können über die URL verschiedene Suchparameter angegeben werden. Die Antwort wird immer in einer Liste mit den gefundenen Studenten geliefert.
       parameters:
         - schema:
             type: string
@@ -162,7 +162,7 @@ paths:
         "404":
           description: Not Found
       operationId: patch-student-id
-      description: "Daten eines Studenteintags überschreiben. Bei der PATCH Anfrage müssen nur die Felder mitgegeben werden, die tatsächlich geändert werden sollen"
+      description: "Daten eines Studenteintags überschreiben. Bei der PATCH Anfrage müssen nur die Felder mitgegeben werden, die tatsächlich geändert werden sollen."
       requestBody:
         content:
           application/json:
@@ -193,7 +193,7 @@ paths:
         "404":
           description: Not Found
       operationId: get-student-id
-      description: Details zu einem einzelnen Studenten
+      description: "Einen einzelnen Studenten anhand seiner ID erhalten, welche von der Datenbank generiert wurde."
   /openapi.yaml:
     get:
       summary: OpenAPI-Spezifikation des Webservices
@@ -211,7 +211,8 @@ components:
       type: object
       description: |-
         Eintrag in der Datenbank um eine Übersicht über alle Studenten zu erhalten.
-        Dieser Betseht aus Pronomen, Vorname, Nachname, Geburtsdatum, Geschlecht und Studiengang.
+        Dieser Betseht aus Matrikelnummer, Pronomen, Vorname, Nachname, Geburtsdatum, Geschlecht, Geburtstag, Fakultät, Studiengang, Studienrichtung, Kursnummer, E-Mail, Passwort, Makierungen ob der Student eingeloggt ist oder den Reminder zur Datenaktualisierung erhalten möchte und einer Beschreibung.
+        Dabei ist die ID, die Matrikelnummer, der Name, und E-Mail und Passwort verpflichtend um ein Studenten zu erstellen.
         Die ID wird mit der Datenbank generiert.
       properties:
         _links:
@@ -219,6 +220,8 @@ components:
         _id:
           type: string
         matrikel_nr:
+          type: string
+        pronoun:
           type: string
         first_name:
           type: string
@@ -238,11 +241,14 @@ components:
           type: string
         password:
           type: string
+        about:
+          type: string
         logged:
           type: string
         reminder:
           type: string
       required:
+        - _id
         - matrikel_nr
         - first_name
         - last_name
@@ -262,7 +268,7 @@ components:
     HATEOAS_Resource:
       title: HATEOAS_Resource
       type: object
-      description: "HATEOAS-Verlinkungen zu einem einzelnen Datensatz / Adressbucheintrag. Definiert, wie der Eintrag gelesen, aktualisiert, gepatcht oder gelöscht werden kann."
+      description: "HATEOAS-Verlinkungen zu einem einzelnen Datensatz. Definiert, wie der Eintrag gelesen, aktualisiert, gepatcht oder gelöscht werden kann."
       properties:
         read:
           $ref: "#/components/schemas/HATEOAS_Link"
@@ -287,5 +293,8 @@ components:
             type: string
 tags:
   - name: Start
+    description: Anfragen an Root
   - name: Student
+    description: "Welche API Calls sind an /student/{id} möglich"
   - name: Studentenliste
+    description: Welche API Calls sind an /student möglich

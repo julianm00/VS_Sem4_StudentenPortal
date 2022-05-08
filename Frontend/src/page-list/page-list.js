@@ -24,7 +24,7 @@ export default class PageList extends Page {
         this._numSel = null;
 
         this._dataLoggedStudent = null;
-        this._dataLoggedStudentDataset = null;
+        this._datasetLoggedStudent;
 
         this._templateStudentDiv = null;
         this._saveContent = null
@@ -32,33 +32,30 @@ export default class PageList extends Page {
 
     /**
      * HTML-Inhalt und anzuzeigende Daten laden.
-     *
-     * HINWEIS: Durch die geerbte init()-Methode wird `this._mainElement` mit
-     * dem <main>-Element aus der nachgeladenen HTML-Datei versorgt. Dieses
-     * Element wird dann auch von der App-Klasse verwendet, um die Seite
-     * anzuzeigen. Hier muss daher einfach mit dem üblichen DOM-Methoden
-     * `this._mainElement` nachbearbeitet werden, um die angezeigten Inhalte
-     * zu beeinflussen.
      */
     async init() {
         // HTML-Inhalt nachladen
         await super.init();
-        await this._updateList();
         this._title = "Übersicht";
-
-        if(!this._dataLoggedStudent) {
+        await this._updateList();
+        // Falls Link aufgerufen wird und kein Nutzer angemeldet ist
+        if (!this._dataLoggedStudent) {
             location.hash = "#/login/";
             return;
         }
 
+        // Tempplate speichern
         this._templateStudentDiv = this._mainElement.querySelector(".student-entry");
+        // Studenten anzeigen
         let data_student = await this._showStudents("");
 
+        // Dropdownmenu bekommen
         this.updateSelector(data_student, "#kurs", "course");
         this.updateSelector(data_student, "#fak", "fakultaet");
         this.updateSelector(data_student, "#richtung", "direction");
         this.updateSelector(data_student, "#nummer", "course_id");
 
+        // Actionlistener registrieren
         let logout = document.querySelector("#logout-btn");
         logout.addEventListener("click", () => this._logout());
 
@@ -77,7 +74,8 @@ export default class PageList extends Page {
         this._numSel = this._mainElement.querySelector("#nummer");
         this._numSel.addEventListener("change", () => this._updateStudentsNum());
 
-        if(this._dataLoggedStudentDataset.reminder == "y") {
+        // Alert falls Reminder aktiv ist (Noch nie auf Edit Seite gewesen)
+        if(this._datasetLoggedStudent.reminder == "y") {
             swal({
                 title: "Reminder",
                 text: "Sie haben noch nich alle Ihre Daten festgelegt!\nFüllen Sie die Daten bitte, sodass ihre Komolitonen Sie finden können.",
@@ -93,9 +91,9 @@ export default class PageList extends Page {
                     case "cancel":
                         break;
                     case "rem":
-                        let stringID = "/student/" + this._dataLoggedStudentDataset._id;
-                        this._dataLoggedStudentDataset.reminder = "n";
-                        await this._app.backend.fetch("PUT", stringID, {body: this._dataLoggedStudentDataset});
+                        let stringID = "/student/" + this._datasetLoggedStudent._id;
+                        this._datasetLoggedStudent.reminder = "n";
+                        await this._app.backend.fetch("PUT", stringID, {body: this._datasetLoggedStudent});
                         break;
                     case "go":
                         location.hash = "#/edit/";
@@ -107,41 +105,22 @@ export default class PageList extends Page {
 
     }
     
-    async _updateList() {
-        this._dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
-        this._dataLoggedStudentDataset = this._dataLoggedStudent[0];
-
-        document.querySelector("#lin1").classList.add("hidden");
-        document.querySelector("#lin2").classList.add("hidden");
-        document.querySelector("#lin3").classList.add("hidden");
-
-        document.querySelector("#lout1").classList.add("hidden");
-        document.querySelector("#lout2").classList.add("hidden");
-
-        if (!this._dataLoggedStudent) {
-            document.querySelector("#lout1").classList.remove("hidden");
-            document.querySelector("#lout2").classList.remove("hidden");
-
-        } else {
-            document.querySelector("#lin1").classList.remove("hidden");
-            document.querySelector("#lin2").classList.remove("hidden");
-            document.querySelector("#lin3").classList.remove("hidden");
-
-            document.querySelector("#lout1").classList.add("hidden");
-            document.querySelector("#lout2").classList.add("hidden");
-        }
-
-    }
-
+    /**
+     * Logout Button Funktion
+     * Überschreiben des "Logged" Feldes des eingeloggten Studenten mit "n" (no)
+     */
     async _logout() {
-        let stringID = "/student/" + this._dataLoggedStudentDataset._id;
-        this._dataLoggedStudentDataset.logged = "n";
+        let stringID = "/student/" + this._datasetLoggedStudent._id;
+        this._datasetLoggedStudent.logged = "n";
 
-        await this._app.backend.fetch("PUT", stringID, {body: this._dataLoggedStudentDataset});
+        await this._app.backend.fetch("PUT", stringID, {body: this._datasetLoggedStudent});
 
         location.hash = "#/login/";
     }
 
+    /**
+     * Methode zum anzeigen der Studenten mit der ausgewählten Fakultät
+     */
     async _updateStudentsFak() {
         let getValue;
 
@@ -162,6 +141,9 @@ export default class PageList extends Page {
         }
     }
 
+    /**
+     * Methode zum anzeigen der Studenten mit der ausgewählten Kursnummer
+     */
     async _updateStudentsNum() {
         let getValue;
 
@@ -181,6 +163,9 @@ export default class PageList extends Page {
         }
     }
 
+    /**
+     * Methode zum anzeigen der Studenten mit der ausgewählten Studienrichtung
+     */
     async _updateStudentsDir() {
         let getValue;
 
@@ -200,6 +185,9 @@ export default class PageList extends Page {
         }
     }
 
+    /**
+     * Methode zum anzeigen der Studenten mit dem ausgewählten Studiengang
+     */
     async _updateStudentsKurs() {
         let getValue;
 
@@ -219,6 +207,10 @@ export default class PageList extends Page {
         }
     }
 
+    /**
+     * Methode zum aktualisieren der angezeigten Studenten
+     * @param {*} val Query-Parameter des ausgewählten Filters
+     */
     async _showStudents(val) {
         let getString = "/student?logged=n" + val;
         let data_student = await this._app.backend.fetch("GET", getString);
@@ -261,6 +253,39 @@ export default class PageList extends Page {
         return data_student;
     }
 
+    /**
+     * Methode um die Listeneinträge (je nach eingeloggtem User) hinzuzufügen
+     */
+    async _updateList() {
+        this._dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
+
+        this._datasetLoggedStudent = this._dataLoggedStudent[0];
+
+        document.querySelector("#lin1").classList.add("hidden");
+        document.querySelector("#lin2").classList.add("hidden");
+        document.querySelector("#lin3").classList.add("hidden");
+
+        document.querySelector("#lout1").classList.add("hidden");
+        document.querySelector("#lout2").classList.add("hidden");
+
+        if (!this._dataLoggedStudent) {
+            document.querySelector("#lout1").classList.remove("hidden");
+            document.querySelector("#lout2").classList.remove("hidden");
+
+        } else {
+            document.querySelector("#lin1").classList.remove("hidden");
+            document.querySelector("#lin2").classList.remove("hidden");
+            document.querySelector("#lin3").classList.remove("hidden");
+
+            document.querySelector("#lout1").classList.add("hidden");
+            document.querySelector("#lout2").classList.add("hidden");
+        }
+
+    }
+
+    /**
+     * Anzeigen des Menus auf dem Mobilgerät durch Button Klick
+     */
     showMenu() {
         let filterMenu = this._mainElement.querySelector(".selectors");
         if (filterMenu.classList.contains("hidden")) {
@@ -271,6 +296,12 @@ export default class PageList extends Page {
 
     }
 
+    /**
+     * Befüllen der Dropdown-Menus mit eindeutigen werten
+     * @param {*} data Daten eines Collection (aller Studenten)
+     * @param {*} selectID ID des Selects
+     * @param {*} option Feld in der Collection
+     */
     updateSelector(data, selectID, option) {
         let array = []; 
         let uniques = []

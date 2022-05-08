@@ -16,11 +16,14 @@ export default class Register extends Page {
     constructor(app) {
         super(app, HtmlTemplate);
 
+        // Falls Liste leer ist
         this._emptyMessageElement = null;
-        this._toReg = null;
 
+        // Datensätze für Student
         this._dataset_student = null;
+        this._dataLoggedStudent = null;
 
+        // Eingabefelder
         this._inputEmail = null,
         this._inputPassword = null;
     }
@@ -28,22 +31,23 @@ export default class Register extends Page {
     /**
      * HTML-Inhalt und anzuzeigende Daten laden.
      *
-     * HINWEIS: Durch die geerbte init()-Methode wird `this._mainElement` mit
-     * dem <main>-Element aus der nachgeladenen HTML-Datei versorgt. Dieses
-     * Element wird dann auch von der App-Klasse verwendet, um die Seite
-     * anzuzeigen. Hier muss daher einfach mit dem üblichen DOM-Methoden
-     * `this._mainElement` nachbearbeitet werden, um die angezeigten Inhalte
-     * zu beeinflussen.
      */
     async init() {
-        await this._updateList();
         // HTML-Inhalt nachladen
         await super.init();
         this._title = "Login";
+        await this._updateList();
+        // Falls Link aufgerufen wird und Nutzer angemeldet ist
+        if (this._dataLoggedStudent) {
+            location.hash = "#/";
+            return;
+        }
 
+        // Inputfelder bekommen
         this._inputEmail = this._mainElement.querySelector("#email");
         this._inputPassword = this._mainElement.querySelector("#password");
 
+        // ActionListener registrieren
         let saveButton = this._mainElement.querySelector(".btn.auth-btn");
         saveButton.addEventListener("click", () => this._login());
 
@@ -51,6 +55,9 @@ export default class Register extends Page {
         toRegLink.addEventListener("click", () => this.toRegister());
     }
 
+    /**
+     * Login  Button der bei richtigen Daten das Feld "logged" in Student mit "y" (yes) überschreibt
+     */
     async _login() {
         // Felder sind leer
         if (!this._inputEmail.value.trim() || !this._inputPassword.value.trim()) {
@@ -119,8 +126,11 @@ export default class Register extends Page {
         location.hash = "#/";
     }
 
+    /**
+     * Methode um die Listeneinträge (je nach eingeloggtem User) hinzuzufügen
+     */
     async _updateList() {
-        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
+        this._dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -129,7 +139,7 @@ export default class Register extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (!data_student.length) {
+        if (this._dataLoggedStudent) {
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 

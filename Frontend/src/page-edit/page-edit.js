@@ -21,6 +21,9 @@ export default class PageEdit extends Page {
         this._editId = editId;
 
         this._dataset;
+
+        this._dataLoggedStudent = null;
+        this._datasetLoggedStudent = null;
         
         // Anzeigefelder
         this._firstNameDisplay = null;
@@ -49,20 +52,23 @@ export default class PageEdit extends Page {
     async init() {
         // HTML-Inhalt nachladen
         await super.init();
+
         await this._updateList();
 
-        let returnArray = await this._app.backend.fetch("GET", '/student?logged=y'); 
-        this._dataset = returnArray[0];
+        if(!this._dataLoggedStudent) {
+            location.hash = "#/login/";
+            return;
+        }
 
         // Platzhalter im HTML-Code ersetzen
         let html = this._mainElement.innerHTML;
-        html = html.replace("$FN$", this._dataset.first_name);
-        html = html.replace("$LN$", this._dataset.last_name);
-        html = html.replace("$BD$", this._dataset.birthday);
-        //html = html.replace("$FAK$", this._dataset.fakultät);
-        html = html.replace("$DIR$", this._dataset.course);
-        html = html.replace("$C_ID$", this._dataset.course_id);
-        html = html.replace("$EMAIL$", this._dataset.email);
+        html = html.replace("$FN$", this._datasetLoggedStudent.first_name);
+        html = html.replace("$LN$", this._datasetLoggedStudent.last_name);
+        html = html.replace("$BD$", this._datasetLoggedStudent.birthday);
+        html = html.replace("$FAK$", this._datasetLoggedStudent.fakultaet);
+        html = html.replace("$DIR$", this._datasetLoggedStudent.course);
+        html = html.replace("$C_ID$", this._datasetLoggedStudent.course_id);
+        html = html.replace("$EMAIL$", this._datasetLoggedStudent.email);
         
         this._mainElement.innerHTML = html;
 
@@ -144,7 +150,8 @@ export default class PageEdit extends Page {
     }
 
     async _updateList() {
-        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
+        this._dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
+        this._datasetLoggedStudent = this._dataLoggedStudent[0];
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -153,7 +160,7 @@ export default class PageEdit extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (!data_student.length) {
+        if (!this._dataLoggedStudent) {
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 

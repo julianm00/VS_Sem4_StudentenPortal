@@ -16,19 +16,16 @@ export default class Register extends Page {
     constructor(app) {
         super(app, HtmlTemplate);
 
-        this._toLog = null;
-
+        // Datensatz des zu erstellenden Studenten
         this._dataset_student = {
             first_name: "",
             last_name: "",
             matrikel_nr: "",
-            birthday: "",
-            course: "",
-            course_id: "",
             email: "",
             password: ""
         }
 
+        // Inputfelder der Registrierseite
         this._inputMatrikelNr = null;
         this._inputEmail = null,
         this._inputPassword = null;
@@ -39,20 +36,18 @@ export default class Register extends Page {
 
     /**
      * HTML-Inhalt und anzuzeigende Daten laden.
-     *
-     * HINWEIS: Durch die geerbte init()-Methode wird `this._mainElement` mit
-     * dem <main>-Element aus der nachgeladenen HTML-Datei versorgt. Dieses
-     * Element wird dann auch von der App-Klasse verwendet, um die Seite
-     * anzuzeigen. Hier muss daher einfach mit dem üblichen DOM-Methoden
-     * `this._mainElement` nachbearbeitet werden, um die angezeigten Inhalte
-     * zu beeinflussen.
      */
     async init() {
         // HTML-Inhalt nachladen
         await super.init();
-        await this._updateList();
+        this._updateList();
         this._title = "Register";
-
+        // Falls Link aufgerufen wird und Nutzer angemeldet ist
+        if (this._dataLoggedStudent) {
+            location.hash = "#/";
+            return;
+        }
+        // Inputfelder bekommen
         this._inputFirstName        = this._mainElement.querySelector("#firstName");
         this._inputLastName         = this._mainElement.querySelector("#lastName");
         this._inputMatrikelNr       = this._mainElement.querySelector("#matrikelNr");
@@ -60,6 +55,7 @@ export default class Register extends Page {
         this._inputPassword         = this._mainElement.querySelector("#password");
         this._inputPasswordRepeat   = this._mainElement.querySelector("#passwordRepeat")
 
+        // Actionlistener registrieren
         let saveButton = this._mainElement.querySelector(".btn.auth-btn");
         saveButton.addEventListener("click", () => this._register());
 
@@ -196,8 +192,11 @@ export default class Register extends Page {
         });
     }
 
+    /**
+     * Methode um die Listeneinträge (je nach eingeloggtem User) hinzuzufügen
+     */
     async _updateList() {
-        let data_student = await this._app.backend.fetch("GET", "/student?logged=y");
+        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -206,7 +205,7 @@ export default class Register extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (!data_student.length) {
+        if (_dataLoggedStudent) {
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 
@@ -221,6 +220,9 @@ export default class Register extends Page {
 
     }
 
+    /**
+     * Registrier Button Methode zum Login
+     */
     toLogin() {
         location.hash = "#/login/";
     }
