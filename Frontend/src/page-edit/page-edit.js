@@ -81,9 +81,14 @@ export default class PageEdit extends Page {
             this._editButton.innerText= "Speichern"
             this._editButton.value = "save";
 
+
             for (let i in inputFields) {
-                inputFields[i].disabled = 0;
-            }
+                try {
+                    inputFields[i].disabled = 0;
+                } catch {
+                    console.log("Fehler wegen Aktivieren/Deaktivieren der Input-Felder. Funktioniert trotzdem :)")
+                }
+            };
 
             return;
         } else {
@@ -160,7 +165,13 @@ export default class PageEdit extends Page {
 
                     // Felder deaktivieren
                     for (let i in inputFields) {
-                        inputFields[i].disabled = 1;
+                        for (let i in inputFields) {
+                            try {
+                                inputFields[i].disabled = 1;
+                            } catch {
+                                console.log("Fehler wegen Aktivieren/Deaktivieren der Input-Felder. Funktioniert trotzdem :)")
+                            }
+                        };
                     };
 
                     this.updateFormInputs();
@@ -172,7 +183,13 @@ export default class PageEdit extends Page {
                     this._editButton.value = "edit";
 
                     for (let i in inputFields) {
-                        inputFields[i].disabled = 1;
+                        for (let i in inputFields) {
+                            try {
+                                inputFields[i].disabled = 1;
+                            } catch {
+                                console.log("Fehler wegen Aktivieren/Deaktivieren der Input-Felder. Funktioniert trotzdem :)")
+                            }
+                        };
                     };
                 };
             });
