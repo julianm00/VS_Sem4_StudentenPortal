@@ -1,7 +1,5 @@
-SPA/REST-Vorlage: Gateway
+Studentenportal StudentSocial: Gateway
 =========================
-
-__TODO: Dokument überarbeiten__
 
 Inhaltsverzeichnis
 ------------------
@@ -14,7 +12,7 @@ Inhaltsverzeichnis
 Kurzbeschreibung
 ----------------
 
-Dies ist der Gateway-Server der Vorlageanwendung, der alle Einzelservices
+Dies ist der Gateway-Server der Studentenportal StudentSocial, der alle Einzelservices
 der Anwendung hinter einem zentralen HTTP-Endpunkt verbirgt. Für die Entwicklung
 ist es tatsächlich besser, jeden Service über eine localhost-Adresse des eigenen
 Rechners direkt ansprechen zu können. Setzt sich eine Anwendung allerdings aus
