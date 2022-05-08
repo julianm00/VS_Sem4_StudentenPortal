@@ -37,17 +37,6 @@ export default class PageEdit extends Page {
     /**
      * HTML-Inhalt und anzuzeigende Daten laden.
      *
-     * HINWEIS: Durch die geerbte init()-Methode wird `this._mainElement` mit
-     * dem <main>-Element aus der nachgeladenen HTML-Datei versorgt. Dieses
-     * Element wird dann auch von der App-Klasse verwendet, um die Seite
-     * anzuzeigen. Hier muss daher einfach mit dem üblichen DOM-Methoden
-     * `this._mainElement` nachbearbeitet werden, um die angezeigten Inhalte
-     * zu beeinflussen.
-     *
-     * HINWEIS: In dieser Version der App wird mit dem üblichen DOM-Methoden
-     * gearbeitet, um den finalen HTML-Code der Seite zu generieren. In größeren
-     * Apps würde man ggf. eine Template Engine wie z.B. Nunjucks integrieren
-     * und den JavaScript-Code dadurch deutlich vereinfachen.
      */
     async init() {
         // HTML-Inhalt nachladen
@@ -55,20 +44,23 @@ export default class PageEdit extends Page {
 
         await this._updateList();
 
-        if(!this._dataLoggedStudent) {
+        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
+        let _datasetLoggedStudent = _dataLoggedStudent[0];
+
+        if(!_dataLoggedStudent) {
             location.hash = "#/login/";
             return;
         }
 
         // Platzhalter im HTML-Code ersetzen
         let html = this._mainElement.innerHTML;
-        html = html.replace("$FN$", this._datasetLoggedStudent.first_name);
-        html = html.replace("$LN$", this._datasetLoggedStudent.last_name);
-        html = html.replace("$BD$", this._datasetLoggedStudent.birthday);
-        html = html.replace("$FAK$", this._datasetLoggedStudent.fakultaet);
-        html = html.replace("$DIR$", this._datasetLoggedStudent.course);
-        html = html.replace("$C_ID$", this._datasetLoggedStudent.course_id);
-        html = html.replace("$EMAIL$", this._datasetLoggedStudent.email);
+        html = html.replace("$FN$", _datasetLoggedStudent.first_name);
+        html = html.replace("$LN$", _datasetLoggedStudent.last_name);
+        html = html.replace("$BD$", _datasetLoggedStudent.birthday);
+        html = html.replace("$FAK$", _datasetLoggedStudent.fakultaet);
+        html = html.replace("$DIR$", _datasetLoggedStudent.course);
+        html = html.replace("$C_ID$", _datasetLoggedStudent.course_id);
+        html = html.replace("$EMAIL$", _datasetLoggedStudent.email);
         
         this._mainElement.innerHTML = html;
 
@@ -150,8 +142,8 @@ export default class PageEdit extends Page {
     }
 
     async _updateList() {
-        this._dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
-        this._datasetLoggedStudent = this._dataLoggedStudent[0];
+        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
+        console.log("UPDATING NAVIGATION BAR - EDIT");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -160,11 +152,19 @@ export default class PageEdit extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (!this._dataLoggedStudent) {
+        if (_dataLoggedStudent.length == 0) {
+            console.log("IF USER LOGGED OUT")
+            console.log("==================");
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 
+            document.querySelector("#lin1").classList.add("hidden");
+            document.querySelector("#lin2").classList.add("hidden");
+            document.querySelector("#lin3").classList.add("hidden");
+            return;
         } else {
+            console.log("IF USER LOGGED IN")
+            console.log("=================");
             document.querySelector("#lin1").classList.remove("hidden");
             document.querySelector("#lin2").classList.remove("hidden");
             document.querySelector("#lin3").classList.remove("hidden");

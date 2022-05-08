@@ -23,9 +23,6 @@ export default class PageList extends Page {
         this._dirSel = null;
         this._numSel = null;
 
-        this._dataLoggedStudent = null;
-        this._datasetLoggedStudent;
-
         this._templateStudentDiv = null;
         this._saveContent = null
     }
@@ -34,18 +31,18 @@ export default class PageList extends Page {
      * HTML-Inhalt und anzuzeigende Daten laden.
      */
     async init() {
+        console.log("INITIALISING PAGE - LIST");
         // HTML-Inhalt nachladen
         await super.init();
         this._title = "Übersicht";
         await this._updateList();
-        // Falls Link aufgerufen wird und kein Nutzer angemeldet ist
-        if (!this._dataLoggedStudent) {
-            location.hash = "#/login/";
-            return;
-        }
+
+        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
+        let _datasetLoggedStudent = _dataLoggedStudent[0];
 
         // Tempplate speichern
         this._templateStudentDiv = this._mainElement.querySelector(".student-entry");
+        
         // Studenten anzeigen
         let data_student = await this._showStudents("");
 
@@ -75,47 +72,36 @@ export default class PageList extends Page {
         this._numSel.addEventListener("change", () => this._updateStudentsNum());
 
         // Alert falls Reminder aktiv ist (Noch nie auf Edit Seite gewesen)
-        if(this._datasetLoggedStudent.reminder == "y") {
-            swal({
-                title: "Reminder",
-                text: "Sie haben noch nich alle Ihre Daten festgelegt!\nFüllen Sie die Daten bitte, sodass ihre Komolitonen Sie finden können.",
-                icon: "info",
-                buttons: {
-                    cancel: "Schließen",
-                    rem: "Nicht mehr erinnern",
-                    go: "Los gehts!"
-                }
-            })
-            .then((async value =>  {    
-                switch(value) {
-                    case "cancel":
-                        break;
-                    case "rem":
-                        let stringID = "/student/" + this._datasetLoggedStudent._id;
-                        this._datasetLoggedStudent.reminder = "n";
-                        await this._app.backend.fetch("PUT", stringID, {body: this._datasetLoggedStudent});
-                        break;
-                    case "go":
-                        location.hash = "#/edit/";
-                    return;
-                }
+        if (_datasetLoggedStudent) {
+            if(_datasetLoggedStudent.reminder == "y") {
+                swal({
+                    title: "Reminder",
+                    text: "Sie haben noch nich alle Ihre Daten festgelegt!\nFüllen Sie die Daten bitte, sodass ihre Komolitonen Sie finden können.",
+                    icon: "info",
+                    buttons: {
+                        cancel: "Schließen",
+                        rem: "Nicht mehr erinnern",
+                        go: "Los gehts!"
+                    }
+                })
+                .then((async value =>  {    
+                    switch(value) {
+                        case "cancel":
+                            break;
+                        case "rem":
+                            let stringID = "/student/" + _datasetLoggedStudent._id;
+                            _datasetLoggedStudent.reminder = "n";
+                            await this._app.backend.fetch("PUT", stringID, {body: _datasetLoggedStudent});
+                            break;
+                        case "go":
+                            location.hash = "#/edit/";
+                        return;
+                    }
 
-        }));
+            }));
+            }
         }
-
-    }
-    
-    /**
-     * Logout Button Funktion
-     * Überschreiben des "Logged" Feldes des eingeloggten Studenten mit "n" (no)
-     */
-    async _logout() {
-        let stringID = "/student/" + this._datasetLoggedStudent._id;
-        this._datasetLoggedStudent.logged = "n";
-
-        await this._app.backend.fetch("PUT", stringID, {body: this._datasetLoggedStudent});
-
-        location.hash = "#/login/";
+        console.log("==================");
     }
 
     /**
@@ -132,7 +118,6 @@ export default class PageList extends Page {
         divStudentElement.innerHTML = "";
 
         if (this._fakSel.value == "") {
-            console.log("Test");
             await this._showStudents("");
             return;
         } else {
@@ -212,6 +197,7 @@ export default class PageList extends Page {
      * @param {*} val Query-Parameter des ausgewählten Filters
      */
     async _showStudents(val) {
+        console.log("UPDATING STUDENT LIST");
         let getString = "/student?logged=n" + val;
         let data_student = await this._app.backend.fetch("GET", getString);
 
@@ -231,17 +217,21 @@ export default class PageList extends Page {
             let dataset_student = data_student[index];
             let htmlStudent = templateStudentDivHtml;
 
+            let pronoun     = dataset_student.pronoun;
             let first_name  = dataset_student.first_name;
             let last_name   = dataset_student.last_name;
             let birthday    = dataset_student.birthday;
             let course      = dataset_student.course;
             let course_id   = dataset_student.course_id;
+            let about       = dataset_student.about;
 
+            htmlStudent = htmlStudent.replace("$PRONOUN$", pronoun);
             htmlStudent = htmlStudent.replace("$FIRST_NAME$", first_name);
             htmlStudent = htmlStudent.replace("$LAST_NAME$", last_name);
             htmlStudent = htmlStudent.replace("$BIRTHDAY$", birthday);
             htmlStudent = htmlStudent.replace("$COURSE$", course);
             htmlStudent = htmlStudent.replace("$COURSE_ID$", course_id);
+            htmlStudent = htmlStudent.replace("$ABOUT$", about);
 
             let dummyStudentElement = document.createElement("div");
             dummyStudentElement.innerHTML = htmlStudent;
@@ -250,6 +240,7 @@ export default class PageList extends Page {
             divStudentElement.appendChild(liStudentElement);
         }
 
+        console.log("==================");
         return data_student;
     }
 
@@ -257,9 +248,8 @@ export default class PageList extends Page {
      * Methode um die Listeneinträge (je nach eingeloggtem User) hinzuzufügen
      */
     async _updateList() {
-        this._dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
-
-        this._datasetLoggedStudent = this._dataLoggedStudent[0];
+        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
+        console.log("UPDATING NAVIGATION BAR - LIST");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -268,11 +258,19 @@ export default class PageList extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (!this._dataLoggedStudent) {
+        if (_dataLoggedStudent.length == 0) {
+            console.log("IF USER LOGGED OUT")
+            console.log("==================");
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 
+            document.querySelector("#lin1").classList.add("hidden");
+            document.querySelector("#lin2").classList.add("hidden");
+            document.querySelector("#lin3").classList.add("hidden");
+            return;
         } else {
+            console.log("IF USER LOGGED IN")
+            console.log("=================");
             document.querySelector("#lin1").classList.remove("hidden");
             document.querySelector("#lin2").classList.remove("hidden");
             document.querySelector("#lin3").classList.remove("hidden");
@@ -281,6 +279,33 @@ export default class PageList extends Page {
             document.querySelector("#lout2").classList.add("hidden");
         }
 
+    }
+
+    /**
+     * Logout Button Funktion
+     * Überschreiben des "Logged" Feldes des eingeloggten Studenten mit "n" (no)
+     */
+    async _logout() {
+        console.log("LOGGING OUT")
+        let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
+        let _datasetLoggedStudent = _dataLoggedStudent[0];
+
+        let stringID = "/student/" + _datasetLoggedStudent._id;
+        _datasetLoggedStudent.logged = "n";
+
+        try {
+            await this._app.backend.fetch("PUT", stringID, {body: _datasetLoggedStudent});
+        } catch (ex) {
+            swal({
+                title: "Fehler",
+                text: "Bei der Anfrage mit dem Server gab es Probleme. Wenden Sie sich an den Support oder versuchen Sie es später noch einmal.",
+                icon: "error",
+            });
+            console.log(ex);
+            return;
+        }
+        console.log("=================");
+        location.hash = "#/login/";
     }
 
     /**
@@ -293,7 +318,6 @@ export default class PageList extends Page {
         } else {
             filterMenu.classList.add("hidden");
         }
-
     }
 
     /**

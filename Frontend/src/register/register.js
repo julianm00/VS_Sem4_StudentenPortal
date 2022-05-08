@@ -42,11 +42,7 @@ export default class Register extends Page {
         await super.init();
         this._updateList();
         this._title = "Register";
-        // Falls Link aufgerufen wird und Nutzer angemeldet ist
-        if (this._dataLoggedStudent) {
-            location.hash = "#/";
-            return;
-        }
+
         // Inputfelder bekommen
         this._inputFirstName        = this._mainElement.querySelector("#firstName");
         this._inputLastName         = this._mainElement.querySelector("#lastName");
@@ -74,7 +70,7 @@ export default class Register extends Page {
      * Falls das Passwort nicht übereinstimmt wird ein Fehler geworfen
      */
     async _register() {
-
+        
         this._dataset_student.first_name    = this._inputFirstName.value.trim();
         this._dataset_student.last_name     = this._inputLastName.value.trim();
         this._dataset_student.matrikel_nr   = this._inputMatrikelNr.value.trim();
@@ -197,6 +193,7 @@ export default class Register extends Page {
      */
     async _updateList() {
         let _dataLoggedStudent = await this._app.backend.fetch("GET", "/student?logged=y");
+        console.log("UPDATING NAVIGATION BAR - REGISTER");
 
         document.querySelector("#lin1").classList.add("hidden");
         document.querySelector("#lin2").classList.add("hidden");
@@ -205,11 +202,19 @@ export default class Register extends Page {
         document.querySelector("#lout1").classList.add("hidden");
         document.querySelector("#lout2").classList.add("hidden");
 
-        if (_dataLoggedStudent) {
+        if (_dataLoggedStudent.length == 0) {
+            console.log("IF USER LOGGED OUT")
+            console.log("==================");
             document.querySelector("#lout1").classList.remove("hidden");
             document.querySelector("#lout2").classList.remove("hidden");
 
+            document.querySelector("#lin1").classList.add("hidden");
+            document.querySelector("#lin2").classList.add("hidden");
+            document.querySelector("#lin3").classList.add("hidden");
+            return;
         } else {
+            console.log("IF USER LOGGED IN")
+            console.log("=================");
             document.querySelector("#lin1").classList.remove("hidden");
             document.querySelector("#lin2").classList.remove("hidden");
             document.querySelector("#lin3").classList.remove("hidden");
