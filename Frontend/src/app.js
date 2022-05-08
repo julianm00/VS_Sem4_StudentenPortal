@@ -21,7 +21,6 @@ class App {
         this.backend = new Backend();
 
         // Single Page Router zur Steuerung der sichtbaren Inhalte
-        //// TODO: Routing-Regeln anpassen und ggf. neue Methoden anlegen ////
         this.router = new Router([
             {
                 url: "^/$",
@@ -31,8 +30,6 @@ class App {
                 url: "^/edit/$",
                 show: () => this._gotoEdit()
             },
-            //// TODO: Eigene Routing-Regeln hier in der Mitte einfügen ////
-            //// Login
             {
                 url: "^/register/$",
                 show: () => this._gotoRegister()

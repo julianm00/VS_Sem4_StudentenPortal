@@ -41,7 +41,7 @@ export default class StudentService {
             password:   student.password    || "",
             logged:     student.logged      || "n",
             reminder:   student.reminder    || "y",
-            abooutme:   student.aboout      || ""
+            abooutme:   student.aboout      || "-"
         }
 
         let result = await this._students.insertOne(newStudent);
@@ -79,7 +79,7 @@ export default class StudentService {
         if (student.course_id)      updateDoc.$set.course_id    = student.course_id;
         if (student.email)          updateDoc.$set.email        = student.email;
         if (student.password)       updateDoc.$set.password     = student.password;
-        if (student.aboout)         updateDoc.$set.aboout       = student.aboout;
+        if (student.about)         updateDoc.$set.about       = student.about;
         if (student.logged)         updateDoc.$set.logged       = student.logged;
         if (student.reminder)       updateDoc.$set.reminder     = student.reminder;
     

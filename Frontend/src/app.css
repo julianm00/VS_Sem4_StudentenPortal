@@ -7,21 +7,11 @@
  * stattdessen in das jeweilige Stylesheet.
  */
 
-/**** TODO: Stylesheet überarbeiten ****/
-
-@import url('https://fonts.googleapis.com/css?family=Rubik');
-
 /* ALLGEMEINES */
 html, body {
     padding: 0;
     margin: 0;
     background: rgb(2, 0, 36) !important;
-}
-
-html {
-    font-family: "Rubik", sans-serif;
-    font-size: 10pt;
-    line-height: 1.6;
 }
 
 .hidden {
