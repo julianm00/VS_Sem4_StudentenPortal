@@ -51,7 +51,7 @@ class DatabaseFactory {
                     email:          "muster.max@dh-karlsruhe.de",
                     password:       "ABC123",
                     about:          "Immer für Kaffe zu haben.",
-                    logged:         "n",
+                    logged:         "y",
                     reminder:       "y"
                 },
                 {
