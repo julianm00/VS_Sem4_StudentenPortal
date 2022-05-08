@@ -43,7 +43,7 @@ export default class Register extends Page {
         await super.init();
         await _updateList(this._app);
         this._title = "Register";
-
+        
         // Inputfelder bekommen
         this._inputFirstName        = this._mainElement.querySelector("#firstName");
         this._inputLastName         = this._mainElement.querySelector("#lastName");
@@ -71,7 +71,6 @@ export default class Register extends Page {
      * Falls das Passwort nicht übereinstimmt wird ein Fehler geworfen
      */
     async _register() {
-        
         this._dataset_student.first_name    = this._inputFirstName.value.trim();
         this._dataset_student.last_name     = this._inputLastName.value.trim();
         this._dataset_student.matrikel_nr   = this._inputMatrikelNr.value.trim();

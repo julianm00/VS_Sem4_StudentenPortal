@@ -17,13 +17,16 @@ export default class PageList extends Page {
     constructor(app) {
         super(app, HtmlTemplate);
 
+        // Falls keine Studenten vorhanden sind
         this._emptyMessageElement = null;
 
+        // Selektoren
         this._fakSel = null;
         this._kursSel = null;
         this._dirSel = null;
         this._numSel = null;
 
+        // Templates zum hinzufügen der Studenten in die "Liste"
         this._templateStudentDiv = null;
         this._saveContent = null
     }

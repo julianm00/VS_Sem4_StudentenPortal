@@ -71,6 +71,11 @@ export default class PageEdit extends Page {
         }
     }
 
+    /**
+     * Methode, die die Inputfelder Deaktiviert/Aktiviert
+     * Dabei wird der Name des Buttons geändert
+     * Wenn gespeichert wird, wird der Datensatz über PUT in der Datenbank gespeichert
+     */
     async _enableEditAndSave() {
         let inputFields = this._mainElement.querySelectorAll(".input");
 

@@ -84,6 +84,7 @@ export default class Register extends Page {
         let data_student = await this._app.backend.fetch("GET", getStringStudent);
         this._dataset_student = data_student[0];
 
+        // Falls die E-Mail nicht vorhanden ist
         if (!this._dataset_student) {
             swal({
                 title: "Achtung",
@@ -93,6 +94,7 @@ export default class Register extends Page {
             return;
         }
 
+        // Falls das Passwort nicht mit dem Datensatz übereinstimmt
         let p = this._inputPassword.value.trim();
         if (p != this._dataset_student.password) {
             swal({
@@ -103,6 +105,7 @@ export default class Register extends Page {
             return;
         }
         
+        // Logged des Datensatzes auf "y" setzen und in der Datenbank über PUT speichern
         this._dataset_student.logged = "y";
         let stringID = "/student/" + this._dataset_student._id;
 
@@ -118,6 +121,7 @@ export default class Register extends Page {
             return;
         }
         
+        // Beim Klick des Logins zur Startseite
         try {
             location.hash = "#/";
         } catch {
@@ -131,7 +135,10 @@ export default class Register extends Page {
         }
 
     }
-
+    
+    /**
+     * Link zur Registrier Seite
+     */
     toRegister() {
         location.hash = "#/register/";
     }
